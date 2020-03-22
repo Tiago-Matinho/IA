@@ -79,9 +79,9 @@ escreve_caminho( no(_, Pai, Op, _, _) ) :-
     write(" -> "), write(Op).
 
 max(A, B, C) :-
-    A = B,
+    A > B,!,
     C is A.
 max(A, B, C) :-
-    A > B,
-    C is A.
-max(_, B, B).
+    A < B,!,
+    C is B.
+max(A, A, A).
