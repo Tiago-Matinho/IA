@@ -23,8 +23,8 @@ op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], norte, [ dim(Xmax, Ymax), (Xcur, Yn) ], 1
     Yn > 0,
     \+bloqueado( (Xcur, Ycur), (Xcur, Yn) ),
     \+bloqueado( (Xcur, Yn), (Xcur, Ycur) ).
-%Oeste
-op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], oeste, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1) :-
+%Este
+op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], este, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1) :-
     Xn is Xcur + 1,
     Xn =< Xmax,
     \+bloqueado( (Xcur, Ycur), (Xn, Ycur) ),
@@ -35,8 +35,8 @@ op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], sul, [ dim(Xmax, Ymax), (Xcur, Yn) ], 1) 
     Yn =< Ymax,
     \+bloqueado( (Xcur, Ycur), (Xcur, Yn) ),
     \+bloqueado( (Xcur, Yn), (Xcur, Ycur) ).
-%Este
-op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], este, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1) :-
+%Oeste
+op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], oeste, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1) :-
     Xn is Xcur - 1,
     Xn > 0,
     \+bloqueado( (Xcur, Ycur), (Xn, Ycur) ),
