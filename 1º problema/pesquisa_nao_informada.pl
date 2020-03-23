@@ -42,20 +42,27 @@ op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], oeste, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1
     \+bloqueado( (Xcur, Ycur), (Xn, Ycur) ),
     \+bloqueado( (Xn, Ycur), (Xcur, Ycur) ).
 
+
 %representacao dos nos
 %no(Estado,no_pai,Operador,Custo,Profundidade)
 
-pesquisa_largura([no(E,Pai,Op,C,P)|_],no(E,Pai,Op,C,P), V, M) :-
+
+pesquisa_aux([no(E,Pai,Op,C,P)|_],no(E,Pai,Op,C,P), _, V, M) :- 
 	estado_final(E),
     write("Total de estados visitados: \t"), write(V), nl,
     write("Máximo de estados em memória: \t"), write(M), nl.
-pesquisa_largura([E|R],Sol, V, M):- 
-	expande(E,Lseg),
-        insere_fim(Lseg,R,LFinal),
+pesquisa_aux([no(E,Pai,Op,C,P)|R],Sol, LE, V, M):- 
+	\+ member(E, LE),
+	expande(no(E,Pai,Op,C,P),Lseg),
+        insere_inicio(Lseg,R,LFinal),
         length(LFinal, Mn),
         max(M, Mn, Mnn),
         Vn is V + 1,
-        pesquisa_largura(LFinal,Sol, Vn, Mnn).
+        pesquisa_aux(LFinal,Sol, [E|LE], Vn, Mnn).
+pesquisa_aux([no(E,_,_,_,_)|R],Sol, LE, V, M):- 
+	member(E, LE),
+        pesquisa_aux(R,Sol, LE, V, M).
+
 
 expande(no(E,Pai,Op,C,P),L):- 
 	findall(no(En,no(E,Pai,Op,C,P), Opn, Cnn, P1),
@@ -64,14 +71,12 @@ expande(no(E,Pai,Op,C,P),L):-
 
 pesquisa :-
 	estado_inicial(S0),
-	pesquisa_largura([no(S0,[],[],0,0)], S, 0, 0),
+	pesquisa_aux([no(S0,[],[],0,0)], S, [], 0, 0),
 	escreve_caminho(S).
 
+insere_inicio(A,B,C) :- append(A, B, C).
 
-insere_fim([],L,L).
-insere_fim(L,[],L).
-insere_fim(R,[A|S],[A|L]):- insere_fim(R,S,L).
-
+insere_fim(A,B,C) :- append(B, A, C).
 
 escreve_caminho( no(_, [], _, _, _) ).
 escreve_caminho( no(_, Pai, Op, _, _) ) :-
