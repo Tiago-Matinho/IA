@@ -13,35 +13,35 @@ estado_inicial([dim(4, 4), (1, 1)]).
 
 %estado_final(Estado)
 
-estado_final([_, (4, 1)]).
+estado_final([_, (1, 4)]).
 
 %representacao dos operadores
 %op(Eact,OP,Eseg,Custo)
 
 %Norte
-op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], norte, [ dim(Xmax, Ymax), (Xcur, Yn) ], 1) :-
+op( [ dim(Ymax, Xmax), (Ycur, Xcur) ], norte, [ dim(Ymax, Xmax), (Yn, Xcur) ], 1) :-
     Yn is Ycur - 1,
     Yn > 0,
-    \+bloqueado( (Xcur, Ycur), (Xcur, Yn) ),
-    \+bloqueado( (Xcur, Yn), (Xcur, Ycur) ).
+    \+bloqueado( (Ycur, Xcur), (Yn, Xcur) ),
+    \+bloqueado( (Yn, Xcur), (Ycur, Xcur) ).
 %Este
-op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], este, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1) :-
+op( [ dim(Ymax, Xmax), (Ycur, Xcur) ], este, [ dim(Ymax, Xmax), (Ycur, Xn) ], 1) :-
     Xn is Xcur + 1,
     Xn =< Xmax,
-    \+bloqueado( (Xcur, Ycur), (Xn, Ycur) ),
-    \+bloqueado( (Xn, Ycur), (Xcur, Ycur) ).
+    \+bloqueado( (Ycur, Xcur), (Ycur, Xn) ),
+    \+bloqueado( (Ycur, Xn), (Ycur, Xcur) ).
 %Sul
-op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], sul, [ dim(Xmax, Ymax), (Xcur, Yn) ], 1) :-
+op( [ dim(Ymax, Xmax), (Ycur, Xcur) ], sul, [ dim(Ymax, Xmax), (Yn, Xcur) ], 1) :-
     Yn is Ycur + 1,
     Yn =< Ymax,
-    \+bloqueado( (Xcur, Ycur), (Xcur, Yn) ),
-    \+bloqueado( (Xcur, Yn), (Xcur, Ycur) ).
+    \+bloqueado( (Ycur, Xcur), (Yn, Xcur) ),
+    \+bloqueado( (Yn, Xcur), (Ycur, Xcur) ).
 %Oeste
-op( [ dim(Xmax, Ymax), (Xcur, Ycur) ], oeste, [ dim(Xmax, Ymax), (Xn, Ycur) ], 1) :-
+op( [ dim(Ymax, Xmax), (Ycur, Xcur) ], oeste, [ dim(Ymax, Xmax), (Ycur, Xn) ], 1) :-
     Xn is Xcur - 1,
     Xn > 0,
-    \+bloqueado( (Xcur, Ycur), (Xn, Ycur) ),
-    \+bloqueado( (Xn, Ycur), (Xcur, Ycur) ).
+    \+bloqueado( (Ycur, Xcur), (Ycur, Xn) ),
+    \+bloqueado( (Ycur, Xn), (Ycur, Xcur) ).
 
 
 %representacao dos nos
