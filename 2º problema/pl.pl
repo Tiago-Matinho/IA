@@ -79,8 +79,8 @@ pesquisa :-
 	pesquisa_local_hill_climbingSemCiclos(S0, []).
 
 %heuristica
-heur([_, (Xcur, Ycur)], 0) :-
-    estado_final([_, (Xcur, Ycur)]).
-heur([_, (Xcur, Ycur)], 1) :-
-    \+estado_final([_, (Xcur, Ycur)]).
+heur([_, (Ycur, Xcur)], 0) :-
+    estado_final([_, (Ycur, Xcur)]).
+heur([_, (Ycur, Xcur)], 1) :-
+    \+estado_final([_, (Ycur, Xcur)]).
     
