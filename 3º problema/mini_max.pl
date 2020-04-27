@@ -1,10 +1,10 @@
 :-dynamic(visitados/1).
 visitados(0).
 
-joga :-  
+joga(Op) :-  
 	estado_inicial(Ei), 
 	minimax_decidir(Ei,Op),
-	retract(visitados(V)),
+	visitados(V),
 	write(Op),nl,
     write('Nós visitados: '), write(V), nl. %pode estar errado
 
@@ -13,9 +13,6 @@ joga :-
 
 % se é estado terminal não há jogada 
 minimax_decidir(Ei,terminou) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
 	terminal(Ei).
 
 % Para cada estado sucessor de Ei calcula o valor minimax do estado
@@ -28,6 +25,9 @@ minimax_decidir(Ei,Opf) :-
 % se um estado é terminal o valor é dado pela função de utilidade
 % Nota: assume que o jogador é o "x"
 minimax_valor(Ei,Val,_) :- 
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
 	terminal(Ei), 
 	valor(Ei,Val).
 

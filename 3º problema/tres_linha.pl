@@ -3,7 +3,7 @@
 
 %a)
 %estado_inicial([[v,v,v,v,v],[v,v,v,v,v],[v,v,v,v,v],[v,v,v,v,v]]).
-estado_inicial([[v,v,v,v,v],[v,v,v,o,v],[o,o,x,o,v],[o,x,o,x,x]]).
+estado_inicial([[v,v,v,v,v],[o,x,v,v,v],[x,o,x,v,o],[x,x,o,o,x]]).
 
 %b)
 terminal(G) :- linhas(G,_).
@@ -51,12 +51,12 @@ cheio([L1,L2,L3,L4]) :-
 
 %c)
 %função de utilidade, retorna o valor dos estados terminais, 1 ganha -1 perde
-valor(G, 1) :- linhas(G,x).
-valor(G, 1) :- colunas(G,x).
-valor(G, 1) :- diagonal(G,x).
-valor(G, -1) :- linhas(G,o).
-valor(G, -1) :- colunas(G,o).
-valor(G, -1) :- diagonal(G,o).
+valor(G, 10) :- linhas(G,x).
+valor(G, 10) :- colunas(G,x).
+valor(G, 10) :- diagonal(G,x).
+valor(G, -10) :- linhas(G,o).
+valor(G, -10) :- colunas(G,o).
+valor(G, -10) :- diagonal(G,o).
 valor(_, 0).
 
 %d)
@@ -126,3 +126,14 @@ joga_vazio([L1,L2,L3,L4], J, 2, Y, En) :- cair([L1,L2,L3,L4],2,Y), joga_pos([L1,
 joga_vazio([L1,L2,L3,L4], J, 3, Y, En) :- cair([L1,L2,L3,L4],3,Y), joga_pos([L1,L2,L3,L4],3,Y,J,En).
 joga_vazio([L1,L2,L3,L4], J, 4, Y, En) :- cair([L1,L2,L3,L4],4,Y), joga_pos([L1,L2,L3,L4],4,Y,J,En).
 joga_vazio([L1,L2,L3,L4], J, 5, Y, En) :- cair([L1,L2,L3,L4],5,Y), joga_pos([L1,L2,L3,L4],5,Y,J,En).
+
+joga_inteligente() :-
+	estado_inicial(E),
+	terminal(E).
+
+joga_inteligente() :-
+	joga(joga(X,Y)),
+	retract(estado_inicial(Ei)),
+	joga_pos(Ei, x, X, Y, En),
+	asserta(estado_inicial(En)),
+	joga_inteligente().
