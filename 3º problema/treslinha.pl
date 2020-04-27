@@ -107,30 +107,16 @@ imprime_tabuleiro([[C11,C12,C13,C14],[C21,C22,C23,C24],[C31,C32,C33,C34],[C41,C4
 	write(C13), write('|'), write(C23), write('|'), write(C33), write('|'), write(C43), write('|'), write(C53), nl,
 	write(C14), write('|'), write(C24), write('|'), write(C34), write('|'), write(C44), write('|'), write(C54), nl.
 
-ganhou(E, o) :-
-	terminal(E),
-	write('Jogador ganha!'), nl.
-ganhou(E, o) :-
-	\+terminal(E).
-
-ganhou(E, x) :-
-	terminal(E),
-	write('Bot ganha!'), nl.
-ganhou(E, x) :-
-	\+terminal(E).
-
 joga_jogador(X) :-
 	retract(estado_inicial(Ei)),
 	cair(Ei, X, Y),
 	joga_vazio(Ei, o, X, Y, En),
 	asserta(estado_inicial(En)),
-	imprime_tabuleiro(En),
-	ganhou(En, o).
+	imprime_tabuleiro(En).
 
 joga_bot() :-
 	joga(joga(X,Y)),
 	retract(estado_inicial(Ei)),
 	joga_vazio(Ei, x, X, Y, En),
 	asserta(estado_inicial(En)),
-	imprime_tabuleiro(En),
-	ganhou(En, x).
+	imprime_tabuleiro(En).
