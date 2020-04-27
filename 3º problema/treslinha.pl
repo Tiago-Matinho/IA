@@ -1,10 +1,9 @@
 
 %a)
 % cada posicao pode ter "x", "o" ou "v" (vazio)
-%estado_inicial([[v,v,v,v],[o,x,v,v],[x,o,x,v],[x,x,o,o],[v,v,v,v]]).
 :- dynamic(estado_inicial/1).
-%estado_inicial([[v,v,v,x],[v,v,o,x],[v,o,x,o],[v,o,x,x],[v,x,o,o]]).
-estado_inicial([[x,v,v,v],[v,x,v,v],[v,v,x,v],[v,v,v,v],[v,v,v,v]]).
+estado_inicial([[v,v,v,x],[v,v,o,x],[v,o,x,o],[v,o,x,x],[v,x,o,o]]).
+%estado_inicial([[v,v,v,v],[v,v,v,v],[v,v,v,v],[v,v,v,v],[v,v,v,v]]).
 
 %b)
 terminal(G) :- linhas(G,_).
