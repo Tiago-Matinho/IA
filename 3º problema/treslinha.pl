@@ -2,7 +2,9 @@
 %a)
 % cada posicao pode ter "x", "o" ou "v" (vazio)
 %estado_inicial([[v,v,v,v],[o,x,v,v],[x,o,x,v],[x,x,o,o],[v,v,v,v]]).
-estado_inicial([[v,v,v,x],[v,v,o,x],[v,o,x,o],[v,o,x,x],[v,x,o,o]]).
+:- dynamic(estado_inicial/1).
+%estado_inicial([[v,v,v,x],[v,v,o,x],[v,o,x,o],[v,o,x,x],[v,x,o,o]]).
+estado_inicial([[x,v,v,v],[v,x,v,v],[v,v,x,v],[v,v,v,v],[v,v,v,v]]).
 
 %b)
 terminal(G) :- linhas(G,_).
@@ -99,3 +101,36 @@ joga_vazio([L1,L2,L3,L4,L5], J, 3, Y, En) :- cair([L1,L2,L3,L4,L5],3,Y), joga_po
 joga_vazio([L1,L2,L3,L4,L5], J, 4, Y, En) :- cair([L1,L2,L3,L4,L5],4,Y), joga_pos([L1,L2,L3,L4,L5],4,Y,J,En).
 joga_vazio([L1,L2,L3,L4,L5], J, 5, Y, En) :- cair([L1,L2,L3,L4,L5],5,Y), joga_pos([L1,L2,L3,L4,L5],5,Y,J,En).
 
+imprime_tabuleiro([[C11,C12,C13,C14],[C21,C22,C23,C24],[C31,C32,C33,C34],[C41,C42,C43,C44],[C51,C52,C53,C54]]) :-
+	write(C11), write('|'), write(C21), write('|'), write(C31), write('|'), write(C41), write('|'), write(C51), nl,
+	write(C12), write('|'), write(C22), write('|'), write(C32), write('|'), write(C42), write('|'), write(C52), nl,
+	write(C13), write('|'), write(C23), write('|'), write(C33), write('|'), write(C43), write('|'), write(C53), nl,
+	write(C14), write('|'), write(C24), write('|'), write(C34), write('|'), write(C44), write('|'), write(C54), nl.
+
+ganhou(E, o) :-
+	terminal(E),
+	write('Jogador ganha!'), nl.
+ganhou(E, o) :-
+	\+terminal(E).
+
+ganhou(E, x) :-
+	terminal(E),
+	write('Bot ganha!'), nl.
+ganhou(E, x) :-
+	\+terminal(E).
+
+joga_jogador(X) :-
+	retract(estado_inicial(Ei)),
+	cair(Ei, X, Y),
+	joga_vazio(Ei, o, X, Y, En),
+	asserta(estado_inicial(En)),
+	imprime_tabuleiro(En),
+	ganhou(En, o).
+
+joga_bot() :-
+	joga(joga(X,Y)),
+	retract(estado_inicial(Ei)),
+	joga_vazio(Ei, x, X, Y, En),
+	asserta(estado_inicial(En)),
+	imprime_tabuleiro(En),
+	ganhou(En, x).

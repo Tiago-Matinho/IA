@@ -1,12 +1,12 @@
 :-dynamic(visitados/1).
 visitados(0).
 
-joga :-  
+joga(Op) :-  
 	estado_inicial(Ei), 
 	alfabeta(Ei,Op),
-    retract(visitados(V)),
-	write(Op),nl,
-    write('Nós visitados: '), write(V), nl. %pode estar errado
+	visitados(V),
+	write('Bot -> '), write(Op),nl,
+    write('Nós visitados: '), write(V), nl.
 
 % decide qual é a melhor jogada num estado do jogo
 % alfabeta(Estado, MelhorJogada)
@@ -26,6 +26,9 @@ alfabeta(Ei,Opf) :-
 % se um estado é terminal o valor é dado pela função de utilidade
 % Nota: assume que o jogador é o "x"
 alfabeta_min(Ei,Val,_,_,_) :- 
+	retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
 	terminal(Ei), 
 	valor(Ei,Val), !.
 

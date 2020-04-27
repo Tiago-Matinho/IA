@@ -5,8 +5,8 @@ joga(Op) :-
 	estado_inicial(Ei), 
 	minimax_decidir(Ei,Op),
 	visitados(V),
-	write(Op),nl,
-    write('Nós visitados: '), write(V), nl. %pode estar errado
+	write('Bot ->'), write(Op),nl,
+    write('Nós visitados: '), write(V), nl.
 
 % decide qual é a melhor jogada num estado do jogo
 % minimax_decidir(Estado, MelhorJogada)
