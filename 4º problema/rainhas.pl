@@ -181,7 +181,7 @@ faz_tab(N) :-
 	lista_de_n(N, L),
 	asserta(estado_inicial(L)),
 	diagonais,
-	imprime_tab(L),!.
+	imprime_tab(L), write('Solução: '), nl,!.
 
 
 imprime_pos([], _) :-

@@ -2,7 +2,7 @@
 
 pesquisa_local_hill_climbingSemCiclos(E, _) :- 
 	terminal(E),
-	write(E), write(' ').
+	write('Final:'), nl, imprime_tab(E), nl, nl, write(E).
 
 pesquisa_local_hill_climbingSemCiclos(E, L) :- 
 	imprime_tab(E),
