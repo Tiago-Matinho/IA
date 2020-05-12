@@ -1,109 +1,101 @@
-% cada posicao pode ter "r" (rainha) ou "v" (vazio)
-:- dynamic(estado_inicial/1).
 :- dynamic(tamanho/1).
-:- dynamic(pos_y/1).
-:- dynamic(pos_x/1).
-:- dynamic(pos_xy/2).
-:- dynamic(n_pos/1).
+:- dynamic(coor_diagonais/1).
+:- dynamic(pos_possiveis/2).
+:- dynamic(estado_inicial/1).
 
 
-tamanho(8).
-estado_inicial([[v,r,v,v],[v,v,v,v],[v,v,v,v],[v,v,v,v]]).
+rainhas_na_linha([], C, C).
+rainhas_na_linha([H|T], C, Cf) :-
+	member(H, T),
+	C1 is C + 1,
+	rainhas_na_linha(T, C1, Cf).
+rainhas_na_linha([H|T], C, Cf) :-
+	\+member(H, T),
+	rainhas_na_linha(T, C, Cf).
 
-% conta quantos X existe em lista
-conta_rainhas([], C, C).
-conta_rainhas([r|T], C, Cf) :-
-    C1 is C + 1,
-    conta_rainhas(T, C1, Cf).
-conta_rainhas([v|T], C, Cf) :-
-    conta_rainhas(T, C, Cf).
-
-% uma rainha ou menos 
-menos_que_uma(L) :-
-    conta_rainhas(L, 0, C),
-    C @< 2.
-
-zero_rainhas(L) :-
-    conta_rainhas(L, 0, 0).
+diagonal_dir([], _, _, C, C).
+diagonal_dir([H|T], Y, Diff, C, Cf) :-
+	Yn is Y - Diff,
+	Yn \= H,
+	DiffN is Diff + 1,
+	diagonal_dir(T, Y, DiffN, C, Cf).
+diagonal_dir([H|T], Y, Diff, C, Cf) :-
+	Yn is Y - Diff,
+	Yn = H,
+	asserta(remover(Diff, Y)),
+	C1 is C + 1,
+	DiffN is Diff + 1,
+	diagonal_dir(T, Y, DiffN, C1, Cf).
 
 
-% verifica se existe uma ou menos rainhas nas sublistas da lista
-lista([]).
-lista([H|T]) :-
-    menos_que_uma(H),
-    lista(T).
+diagonais_dir([], C, C).
+diagonais_dir([H|T], C, Cf) :-
+	diagonal_dir(T, H, 1, 0, Cn),
+	Cnn is C + Cn,
+	diagonais_dir(T, Cnn, Cf).
+diagonais_dir([H|T], C, Cf) :-
+	diagonal_dir(T, H, 1, 0, Cn),
+	Cnn is C + Cn,
+	diagonais_dir(T, Cnn, Cf).
 
-% passa as colunas para sublistas
-lista_colunas_aux([], [], _).
-lista_colunas_aux([H1|T1], [H2|T2], C) :-
-    nth0(C, H1, H2),
-    lista_colunas_aux(T1, T2, C).
+dentro(X, Y, N) :-
+	X @> 0, X @=< N,
+	Y @> 0, Y @=< N.
 
-lista_colunas(_, [], N) :- tamanho(N).
-lista_colunas(Tab, [H|T], C) :-
-    C1 is C + 1,
-    lista_colunas_aux(Tab, H, C),
-    lista_colunas(Tab, T, C1).
+diagonal_cima_aux(X, Y, [(X,Y)|T], N) :-
+	dentro(X,Y,N),
+	X1 is X + 1, Y1 is Y - 1,
+	diagonal_cima_aux(X1, Y1, T, N).
+diagonal_cima_aux(X, Y, [], N) :-
+	\+dentro(X, Y, N).
 
-% busca o valor do tabuleiro na posicao X Y
-get(Tab, X, Y, V) :-
-    X1 is X - 1, Y1 is Y - 1,
-    nth0(Y1, Tab, Tabb),
-    nth0(X1, Tabb, V).
+diagonal_baixo_aux(X, Y, [(X,Y)|T], N) :-
+	dentro(X,Y,N),
+	X1 is X + 1, Y1 is Y + 1,
+	diagonal_baixo_aux(X1, Y1, T, N).
+diagonal_baixo_aux(X, Y, [], N) :-
+	\+dentro(X, Y, N).
 
-% verifica se X e Y pertencem ao tabuleiro
-dentro_tab(X, Y) :-
-    tamanho(N),
-    X @>0, X @=<N,
-    Y @>0, Y @=<N.
+diagonal_y(Y, [D1,D2|T]) :-
+	tamanho(N),
+	dentro(1, Y, N),
+	diagonal_cima_aux(1, Y, D1, N),
+	diagonal_baixo_aux(1, Y, D2, N),
+	Y1 is Y + 1,
+	diagonal_y(Y1, T).
+diagonal_y(Y, []) :-
+	tamanho(N),
+	\+dentro(1, Y, N).
 
-%diagonais
-diagonal_dir_baixo(_, X, Y, []) :-
-    \+dentro_tab(X, Y).
-diagonal_dir_baixo(Tab, X, Y, [H|T]) :-
-    get(Tab, X, Y, H),
-    X1 is X + 1,
-    Y1 is Y + 1,
-    diagonal_dir_baixo(Tab, X1, Y1, T).
+diagonal_cima_x(X, [D|T]) :-
+	tamanho(N),
+	dentro(X, N, N),
+	diagonal_cima_aux(X, N, D, N),
+	X1 is X + 1,
+	diagonal_cima_x(X1, T).
+diagonal_cima_x(X, []) :-
+	tamanho(N),
+	\+dentro(X, N, N).
 
-diagonal_esq_baixo(_, X, Y, []) :-
-    \+dentro_tab(X, Y).
-diagonal_esq_baixo(Tab, X, Y, [H|T]) :-
-    get(Tab, X, Y, H),
-    X1 is X - 1,
-    Y1 is Y + 1,
-    diagonal_esq_baixo(Tab, X1, Y1, T).
+diagonal_baixo_x(X, [D|T]) :-
+	tamanho(N),
+	dentro(X, 1, N),
+	diagonal_baixo_aux(X, 1, D, N),
+	X1 is X + 1,
+	diagonal_baixo_x(X1, T).
+diagonal_baixo_x(X, []) :-
+	tamanho(N),
+	\+dentro(X, 1, N).
 
-% altera o y
-diagonais_y(_, X, Y, []) :-
-    \+dentro_tab(X, Y).
-diagonais_y(Tab, X, Y, [H1,H2|T]) :-
-    dentro_tab(X, Y),
-    diagonal_dir_baixo(Tab, X, Y, H1),
-    diagonal_esq_baixo(Tab, X, Y, H2),
-    Y1 is Y + 1,
-    diagonais_y(Tab, X, Y1, T).
-
-%altera o x
-diagonais_x(_, X, Y, []) :-
-    \+dentro_tab(X, Y).
-diagonais_x(Tab, X, Y, [H1,H2|T]) :-
-    dentro_tab(X, Y),
-    diagonal_dir_baixo(Tab, X, Y, H1),
-    diagonal_esq_baixo(Tab, X, Y, H2),
-    X1 is X + 1,
-    diagonais_x(Tab, X1, Y, T).
-
-%retorna todas as diagonais
-diagonais(Tab, Lf) :-
-    tamanho(N),
-    diagonais_y(Tab, 1, 1, D1),
-    diagonais_x(Tab, 2, 1, D2),
-    diagonais_y(Tab, N, 2, D3),
-    append(D1,D2,D12),
-    append(D12,D3,L),
-    corta(L, Lf),!.
-
+diagonais :-
+	diagonal_y(1, D1),
+	diagonal_baixo_x(2, D2),
+	diagonal_cima_x(2, D3),
+	append(D1,D2,D12),
+	append(D12,D3,D123),
+	corta(D123, L),
+	asserta(coor_diagonais(L)).
+	
 corta([], []).
 corta([H|T1], [H|T2]) :-
     \+member(H, T1),
@@ -111,104 +103,102 @@ corta([H|T1], [H|T2]) :-
     C @> 1,
     corta(T1, T2).
 corta([_|T], L) :-
-    corta(T, L).
+	corta(T, L),!.
 
+%primeiro o tab depois a diagonal que se está a seguir
+rainhas_na_diagonal(_, [], C, C).
+rainhas_na_diagonal(E, [(X, Y)|T], C, Cf) :-
+	X1 is X - 1,
+	nth0(X1, E, Y),
+	C1 is C + 1,
+	rainhas_na_diagonal(E, T, C1, Cf).
+rainhas_na_diagonal(E, [_|T], C, Cf) :-
+	rainhas_na_diagonal(E, T, C, Cf).
 
-% existem N rainhas
-n_rainhas_aux([], C, C).
-n_rainhas_aux([H|T], C, Cf) :-
-    conta_rainhas(H, 0, Cn),
-    Cnn is C + Cn,
-    n_rainhas_aux(T, Cnn, Cf).
+rainhas_nas_diagonais(_, [], C, C). 
+rainhas_nas_diagonais(E, [H|T], C, Cf) :-
+	rainhas_na_diagonal(E, H, 0, Cn),
+	ajuste(Cn, Cnn),
+	Cnnn is C + Cnn,
+	rainhas_nas_diagonais(E, T, Cnnn, Cf).
 
-n_rainhas(Tab) :-
-    tamanho(N),
-    n_rainhas_aux(Tab, 0, N).
+ajuste(C, Cn) :- C @> 0, Cn is C - 1.
+ajuste(C, C).
 
-terminal(G) :-
-    n_rainhas(G),
-    lista(G),                               %linhas
-    lista_colunas(G, Col, 0), lista(Col),   %colunas
-    diagonais(G, D), lista(D).              %diagonais
+diagonais_conta(E, C) :-
+	coor_diagonais(L),
+	rainhas_nas_diagonais(E, L, 0, C), !.
 
+heur(E, H) :-
+	rainhas_na_linha(E, 0, C1),
+	diagonais_conta(E, C2),
+	H is C1 + C2.
 
-nova_rainha_aux([v|T], 1, [r|T]).
-nova_rainha_aux([H|T1], X, [H|T2]) :-
+terminal(E) :- heur(E, 0).
+
+faz_possiveis(E) :-
+	retractall(pos_possiveis(_, _)),
+	tamanho(N),
+	findall((X,Y), (between(1,N,X), between(1,N, Y)), L),
+	escreve(E, L).
+
+escreve(_, []).
+escreve(E, [(X,Y)|T]) :-
+	rainha_na_pos(E, X, Y),
+	escreve(E, T).
+escreve(E, [(X,Y)|T]) :-
+	\+rainha_na_pos(E, X, Y),
+	asserta(pos_possiveis(X,Y)),
+	escreve(E, T).
+
+rainha_na_pos(E, X, Y) :-
+	X1 is X - 1,
+	nth0(X1, E, Y).
+
+op(E, rainha(X, Y), En, 1) :-
+	faz_possiveis(E),
+    pos_possiveis(X, Y),
+    muda_pos(E, X, Y, En).
+
+muda_pos([_|T], 1, Y, [Y|T]).
+muda_pos([H|T1], X, Y, [H|T2]) :-
     X1 is X - 1,
-    nova_rainha_aux(T1, X1, T2).
+    muda_pos(T1, X1, Y, T2).
 
-nova_rainha([H|T], X, 1, [N|T]) :-
-    nova_rainha_aux(H, X, N).
-nova_rainha([H|T1], X, Y, [H|T2]) :-
-    Y1 is Y - 1,
-    nova_rainha(T1, X, Y1, T2).
+lista_de_n(0, []).
+lista_de_n(N, [H|T]) :-
+	N1 is N - 1,
+	tamanho(S),
+	random(1, S, H),
+	lista_de_n(N1, T).
 
-% verifica em que linhas se pode inserir uma rainha
-pos_val_y_aux(Tab, Y) :-
-    Y1 is Y - 1,
-    nth0(Y1, Tab, L),
-    zero_rainhas(L).
-
-pos_val_y(_, N1) :- tamanho(N), N1 is N + 1.
-pos_val_y(Tab, Y) :-
-    tamanho(N), Y @=< N,
-    pos_val_y_aux(Tab, Y),
-    asserta(pos_y(Y)),
-    Y1 is Y + 1,
-    pos_val_y(Tab, Y1).
-pos_val_y(Tab, Y) :-
-    tamanho(N), Y @=< N,
-    Y1 is Y + 1,
-    pos_val_y(Tab, Y1).
-
-% verifica em que colunas se pode inserir uma rainha
-pos_val_x_aux(Tab, X) :-
-    X1 is X - 1,
-    lista_colunas_aux(Tab, L, X1),
-    zero_rainhas(L).
-
-pos_val_x(_, N1) :- tamanho(N), N1 is N + 1.
-pos_val_x(Tab, X) :-
-    tamanho(N), X @=< N,
-    pos_val_x_aux(Tab, X),
-    asserta(pos_x(X)),
-    X1 is X + 1,
-    pos_val_x(Tab, X1).
-pos_val_x(Tab, X) :-
-    tamanho(N), X @=< N,
-    X1 is X + 1,
-    pos_val_x(Tab, X1).
+faz_tab(N) :-
+	retractall(tamanho(_)),
+	retractall(coor_diagonais(_)),
+	retractall(pos_possiveis(_, _)),
+	retractall(estado_inicial(_)),
+	asserta(tamanho(N)),
+	lista_de_n(N, L),
+	asserta(estado_inicial(L)),
+	diagonais,
+	imprime_tab(L),!.
 
 
-% atualiza as novas posicoes validas
-pos_val(Tab) :-
-    retractall(pos_y(_)),
-    retractall(pos_x(_)),
-    retractall(n_pos(_)),
-    pos_val_y(Tab, 1),
-    pos_val_x(Tab, 1),
-    findall(pos_xy(X, Y), (pos_y(Y), pos_x(X)),Lop),
-    length(Lop, N),
-    asserta(n_pos(N)),
-    escreve(Lop).
+imprime_pos([], _) :-
+	nl.
+imprime_pos([Y|T], Y) :-
+	write('r '),
+	imprime_pos(T, Y).
+imprime_pos([A|T], Y) :-
+	A \= Y,
+	write('v '),
+	imprime_pos(T, Y).
 
-escreve([]).
-escreve([H|T]) :-
-    asserta(H),
-    escreve(T).
+imprime_linha(_, N1) :- tamanho(N), N1 is N + 1.
+imprime_linha(E, Y) :-
+	imprime_pos(E, Y),
+	Y1 is Y + 1,
+	imprime_linha(E, Y1).
 
-
-op(E, joga(X, Y), En, C) :-
-    pos_val(E),
-    oper(E, X, Y, En, C).
-
-oper(Tab, X, Y, Ntab, 1) :-
-    pos_xy(X,Y),
-    retract(pos_xy(X,Y)),
-    nova_rainha(Tab, X, Y, Ntab),
-    diagonais(Ntab, D), lista(D).
-    
-%heuristica
-heur(Tab, H) :-
-    pos_val(Tab),
-    n_pos(H).
+imprime_tab(E) :-
+	imprime_linha(E, 1), !.

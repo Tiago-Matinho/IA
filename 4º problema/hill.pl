@@ -1,14 +1,11 @@
+:- use_module(library(statistics)).
 
 pesquisa_local_hill_climbingSemCiclos(E, _) :- 
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
 	terminal(E),
-	write(E), write(' '),nl,
-    write("Total de estados visitados: \t"), write(V1), nl.
+	write(E), write(' ').
 
 pesquisa_local_hill_climbingSemCiclos(E, L) :- 
-	write(E), write(' '),
+	imprime_tab(E),
 	expande(E,LSeg),
 	sort(3, @=<, LSeg, LOrd),
 	obtem_no(LOrd, no(ES, Op, _)),
@@ -27,5 +24,10 @@ obtem_no([_|T], H1) :-
 
 pesquisa :-
 	estado_inicial(S0),
-    asserta(visitados(0)),
-	pesquisa_local_hill_climbingSemCiclos(S0, []).
+	pesquisa_local_hill_climbingSemCiclos(S0, []),!.
+
+run(N) :-
+	faz_tab(N),
+	time(pesquisa).
+
+
