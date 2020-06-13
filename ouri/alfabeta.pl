@@ -7,14 +7,11 @@ visitados(0).
 
 terminal(X, _, _, d) :-
     X @> 24.
-
 terminal(_, X, _, e) :-
     X @> 24.
 
 %% Tentar com o valor a 10 -10 ou 0
-
 valor(X, _, _, X, e).
-
 valor(_, X, _, X, d).
 
 
