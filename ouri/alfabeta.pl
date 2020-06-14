@@ -1,26 +1,14 @@
-:-dynamic(estado_atual/3).
-:-dynamic(jogada_possivel/1).
-estado_atual(0, 0, [1,2,1,3,1,2,1,0,7,0,2,0]).
+:-dynamic(jogador/1).
 :-dynamic(visitados/1).
 visitados(0).
 
-
-terminal(X, _, _, d) :-
-    X @> 24.
-terminal(_, X, _, e) :-
-    X @> 24.
-
-%% Tentar com o valor a 10 -10 ou 0
-valor(X, _, _, X, e).
-valor(_, X, _, X, d).
-
-
-joga(Op) :-  
+joga(Op, V) :-  
+	asserta(visitados(0)),
 	estado_inicial(Ei), 
-	alfabeta(Ei,Op),
-	visitados(V),
-	write('Bot -> '), write(Op),nl,
-    write('Nós visitados: '), write(V), nl.
+	asserta(estado_atual(Ei)),
+	jogador(J),
+	alfabeta(Ei, Op,J),
+	visitados(V).
 
 % decide qual é a melhor jogada num estado do jogo
 % alfabeta(Estado, MelhorJogada)
@@ -32,13 +20,13 @@ alfabeta(Ei,terminou) :-
     asserta(visitados(V1)),
     terminal(Ei).
 
-% Nota: assume que o jogador é o "x"
-alfabeta(Ei,Opf) :- 
-	findall(Vc-Op, (oper(Ei,e,Op,Es), alfabeta_min(Es,Vc,1,-10000,10000)), L),
+% Nota: vai buscar o jogador ao J
+alfabeta(Ei,Opf,J) :- 
+	findall(Vc-Op, (oper(Ei,J,Op,Es), alfabeta_min(Es,Vc,1,-10000,10000)), L),
 	escolhe_max(L,Opf).
 
 % se um estado é terminal o valor é dado pela função de utilidade
-% Nota: assume que o jogador é o "x"
+% Nota: assume que o jogador é o "e" onde???
 alfabeta_min(Ei,Val,_,_,_) :- 
 	retract(visitados(V)),
     V1 is V + 1,
@@ -80,9 +68,9 @@ processa_lista_max([H|T], P, V, A, B, V1) :-
 max(A,B,B) :- A < B, !.
 max(A, _, A).
 
-% jogador "x" nas jogadas impares e jogador "o" nas jogadas pares
-jogador(P, e) :- X is P mod 2, X = 0.
-jogador(P, d) :- X is P mod 2, X = 1.
+% jogador "e" nas jogadas impares e jogador "d" nas jogadas pares
+jogador(P, d) :- X is P mod 2, X = 0.
+jogador(P, e) :- X is P mod 2, X = 1.
 
 % Se a profundidade (P) é par, retorna em Val o maximo de V
 seleciona_valor(V,P,Val) :- 

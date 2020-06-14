@@ -47,7 +47,7 @@ def jogadas_validas(lado):
 
     prolog.retractall("jogada_possivel(X)")
 
-    dic = list(prolog.query("estado_atual(P_e, P_d, Tab)"))[0]
+    dic = list(prolog.query("estado_atual((P_e, P_d, Tab))"))[0]
     tabuleiro = dic["Tab"]
     lista = tabuleiro[inicio:fim]
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     prolog.consult("teste.pl")
     
     #vai buscar o tabuleiro ao estado_atual
-    query = list(prolog.query("estado_atual(Pe, Pd, Tab)"))[0]
+    query = list(prolog.query("estado_atual((Pe, Pd, Tab))"))[0]
     tab = query['Tab']
     #vai buscar a jogada a jogada_possivel
     query = list(prolog.query("jogada_possivel(X)"))[0]
