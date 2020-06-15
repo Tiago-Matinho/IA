@@ -2,7 +2,10 @@
 :-dynamic(visitados/1).
 visitados(0).
 
-%estado_atual((0,0,[4,4,4,4,4,4,4,4,4,4,4,4])).
+jogador(p).
+estado_atual((23,0,[4,4,4,4,4,4,1,1,1,1,1,1])).
+estado_inicial((23,0,[4,4,4,4,4,4,1,1,1,1,1,1])).
+
 
 joga(Op, V) :-  
 	asserta(visitados(0)),
@@ -70,8 +73,8 @@ max(A,B,B) :- A < B, !.
 max(A, _, A).
 
 % jogador "e" nas jogadas impares e jogador "d" nas jogadas pares
-jogador(P, p) :- X is P mod 2, X = 0.
-jogador(P, s) :- X is P mod 2, X = 1.
+jogador(P, s) :- X is P mod 2, X = 0.
+jogador(P, p) :- X is P mod 2, X = 1.
 
 % Se a profundidade (P) é par, retorna em Val o maximo de V
 seleciona_valor(V,P,Val) :- 

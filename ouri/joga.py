@@ -51,36 +51,6 @@ def jogada_prolog(tabuleiro, pos):
     print(lista_str)
 
 
-"""
-//TODO melhoria?
-def jogadas_validas(lado):
-    if(lado == "e"):
-        inicio = 6
-        fim = 12
-
-    else:
-        inicio = 0
-        fim = 6
-
-    prolog.retractall("jogada_possivel(X)")
-
-    dic = list(prolog.query("estado_atual((P_e, P_d, Tab))"))[0]
-    tabuleiro = dic["Tab"]
-    lista = tabuleiro[inicio:fim]
-
-    maximo = int(max(lista))
-
-    if(maximo == 1):
-        for i in range(len(lista)):
-            if(i != 0):
-                prolog.asserta("jogada_possivel(%d)" % (i + 1))
-
-    else:
-        for i in range(len(lista)):
-            if(i > 1):
-                prolog.asserta("jogada_possivel(%d)" % (i + 1))
-"""
-
 if __name__ == '__main__':
     
     Pe = int(sys.argv[1])
