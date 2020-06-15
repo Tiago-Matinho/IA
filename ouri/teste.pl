@@ -1,44 +1,25 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :-dynamic(estado_inicial/1).
-:-dynamic(estado_atual/1).
-:-dynamic(escolha/1).
+:dynamic(jogador/1).
 
 
-%recebe os tabuleiros e os pontos q ganhou. Os tabuleiros atuais são passados
-%com o estado atual, a jogada com a jogada possivel
-recebe_jogada(Tabn, P) :- %//TODO é preciso os pontos da esquerda e direita?
-    estado_atual((Pp, Ps, Tab)),
-    atomics_to_string(Tab, ",", Tabstr),
-    escolha(Es),
-    process_create(path('python3.8'), ['joga.py', Pp, Ps, Tabstr, Es], [stdout(pipe(In))]),
-    read_string(In, _, X),
-    split_string(X, "\n", "", L1),
-    nth1(1, L1, L2),
-    split_string(L2, ",", "", L3),
-    faz_lista(L3, Tabn),
-    nth1(2, L1, L4),
-    atom_number(L4, P).
-
-% transforma lista de str para lista de int
-faz_lista([], []).
-faz_lista([H1|T1], [H2|T2]) :-
-	atom_number(H1, H2),
-	faz_lista(T1, T2).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+estado_inicial([P1, P2, [4,4,4,4,4,4], [4,4,4,4,4,4]]).
+jogador(p1).
 
 
-terminal((X, _, _)) :-
+% REGRAS BASE
+terminal([X|_]) :-
     X @> 24.
-terminal((_, X, _)) :-
+terminal([_, X| _]) :-
     X @> 24.
 
 
-valor((X, _, _), 1000) :- X @> 24, jogador(p).
-valor((_, X, _), 1000) :- X @> 24, jogador(s).
-valor((_, X, _), -1000) :- X @> 24, jogador(p).
-valor((X, _, _), -1000) :- X @> 24, jogador(s).
-valor((X, _, _), X).
+% VALORES
+valor([X|_], 1000) :- X @> 24, jogador(p1).
+valor([_,X|_], 1000) :- X @> 24, jogador(p2).
+valor([X|_], -1000) :- X @> 24, jogador(p2).
+valor([_,X|_], -1000) :- X @> 24, jogador(p2).
+valor(_, 0).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
