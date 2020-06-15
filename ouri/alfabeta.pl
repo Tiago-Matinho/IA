@@ -1,13 +1,15 @@
 :-dynamic(jogador/1).
 :-dynamic(visitados/1).
 visitados(0).
+jogador(e).
+estado_inicial((0,0,[1,7,6,6,5,1,5,5,0,6,5,1])).
+%estado_atual((0,0,[4,4,4,4,4,4,4,4,4,4,4,4])).
 
 joga(Op, V) :-  
 	asserta(visitados(0)),
-	estado_inicial(Ei), 
-	asserta(estado_atual(Ei)),
+	estado_inicial(Ei),
 	jogador(J),
-	alfabeta(Ei, Op,J),
+	alfabeta(Ei, Op, J),
 	visitados(V).
 
 % decide qual é a melhor jogada num estado do jogo

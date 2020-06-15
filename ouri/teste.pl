@@ -2,10 +2,14 @@
 :-dynamic(estado_atual/1).
 :-dynamic(escolha/1).
 
+
 %recebe os tabuleiros e os pontos q ganhou. Os tabuleiros atuais são passados
 %com o estado atual, a jogada com a jogada possivel
 recebe_jogada(Tabn, P) :-
-    process_create(path('python3.8'), ['joga.py'], [stdout(pipe(In))]),
+    estado_atual((Pe, Pd, Tab)),
+    atomics_to_string(Tab, ",", Tabstr),
+    escolha(Es),
+    process_create(path('python3.8'), ['joga.py', Pe, Pd, Tabstr, Es], [stdout(pipe(In))]),
     read_string(In, _, X),
     split_string(X, "\n", "", L1),
     nth1(1, L1, L2),
@@ -23,14 +27,17 @@ faz_lista([H1|T1], [H2|T2]) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-terminal((X, _, _, d)) :-
+terminal((X, _, _)) :-
     X @> 24.
-terminal((_, X, _, e)) :-
+terminal((_, X, _)) :-
     X @> 24.
 
-%isto seria greedy
-valor((X, _, _, X), e).
-valor((_, X, _, X), d).
+
+valor((X, _, _), 100) :- X @> 24, jogador(e).
+valor((_, X, _), 100) :- X @> 24, jogador(d).
+valor((_, X, _), -100) :- X @> 24, jogador(e).
+valor((X, _, _), -100) :- X @> 24, jogador(d).
+valor((_, _, _), 0).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -57,10 +64,11 @@ faz_jogada(Ei, X, Tabn, P) :-
     retractall(estado_atual(_)),        %limpa estados anteriores
     retractall(escolha(_)),             %limpa escolhas anteriores
     asserta(estado_atual(Ei)),          %escreve o estado atual
-    asserta(jogada_possivel(X)),        %escreve a escolha para o python
+    asserta(escolha(X)),                %escreve a escolha para o python
     recebe_jogada(Tabn, P).             %recebe para Tabn o tabuleiro do python
                                         %o mesmo para os pontos no P
 
+%//TODO funcao para reintroduzir pecas no outro lado
 
 % X = 1
 joga_pos((Pe, Pd, Tab), e, 1, (Pen, Pd, Tabn)) :-
@@ -101,37 +109,37 @@ joga_pos((Pe, Pd, Tab), e, 6, (Pen, Pd, Tabn)) :-
 % X = 7
 joga_pos((Pe, Pd, Tab), d, 7, (Pe, Pdn, Tabn)) :-
     lista_lado_d(Tab, Tab_d),
-    jogada_valida(Tab_d, 7),!,
+    jogada_valida(Tab_d, 1),!,
     faz_jogada((Pe, Pd, Tab), 7, Tabn, P),
     Pdn is Pd + P.
 % X = 8
 joga_pos((Pe, Pd, Tab), d, 8, (Pe, Pdn, Tabn)) :-
     lista_lado_d(Tab, Tab_d),
-    jogada_valida(Tab_d, 8),!,
+    jogada_valida(Tab_d, 2),!,
     faz_jogada((Pe, Pd, Tab), 8, Tabn, P),
     Pdn is Pd + P.
 % X = 9
 joga_pos((Pe, Pd, Tab), d, 9, (Pe, Pdn, Tabn)) :-
     lista_lado_d(Tab, Tab_d),
-    jogada_valida(Tab_d, 9),!,
+    jogada_valida(Tab_d, 3),!,
     faz_jogada((Pe, Pd, Tab), 9, Tabn, P),
     Pdn is Pd + P.
 % X = 10
 joga_pos((Pe, Pd, Tab), d, 10, (Pe, Pdn, Tabn)) :-
     lista_lado_d(Tab, Tab_d),
-    jogada_valida(Tab_d, 10),!,
+    jogada_valida(Tab_d, 4),!,
     faz_jogada((Pe, Pd, Tab), 10, Tabn, P),
     Pdn is Pd + P.
 % X = 11
 joga_pos((Pe, Pd, Tab), d, 11, (Pe, Pdn, Tabn)) :-
     lista_lado_d(Tab, Tab_d),
-    jogada_valida(Tab_d, 11),!,
+    jogada_valida(Tab_d, 5),!,
     faz_jogada((Pe, Pd, Tab), 11, Tabn, P),
     Pdn is Pd + P.
 % X = 12
 joga_pos((Pe, Pd, Tab), d, 12, (Pe, Pdn, Tabn)) :-
     lista_lado_d(Tab, Tab_d),
-    jogada_valida(Tab_d, 12),!,
+    jogada_valida(Tab_d, 6),!,
     faz_jogada((Pe, Pd, Tab), 12, Tabn, P),
     Pdn is Pd + P.
 
