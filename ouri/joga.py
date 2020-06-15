@@ -6,32 +6,41 @@ def joga(lista, pos):
     #distribui sementes
     valor = lista[pos] #numero sementes
     i = pos
-    lista[pos] = 0
+    del lista[pos] #remove as sementes
+
     quociente = int(valor/11)
     resto = valor % 11
+
     #ciclo de distribuicao
     while(valor != 0):
-        if(i == pos):   #wrap
-            i -= 1
-        if(i == -1):
-            i = len(lista) - 1
+        if(i == len(lista)): #wrap
+            i = 0
+
         lista[i] += quociente
         valor -= quociente
         if(resto > 0):
             lista[i] += 1
             resto -= 1
             valor -= 1
-        i -= 1
+        i += 1
+
+    #adiciona casa vazia
+    lista.insert(pos, 0)
+
+    i -= 1 #ultima posicao tocada
+
+    if(pos < 6 and i < 6) or (pos >= 6 and i >= 6):
+        return lista, 0
+
     #captura
-    i += 1
     pontos = 0
     #ciclo de captura
     while(lista[i] == 2 or lista[i] == 3):
         pontos += lista[i]
         lista[i] = 0
-        i += 1
-        if(i == len(lista)): #wrap
-            i = 0
+        i -= 1
+        if(i == -1): #wrap
+            i = len(lista) - 1
     
     return lista, pontos
 
@@ -81,5 +90,8 @@ if __name__ == '__main__':
 
     tab = list(tab.split(","))
     tab = list(map(int, tab))
+
+    #tab = [2, 1, 1, 0, 8, 7, 7, 7, 2, 7, 1, 3]
+    #x = 12
 
     jogada_prolog(tab, x)
