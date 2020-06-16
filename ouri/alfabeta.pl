@@ -1,9 +1,10 @@
-:-dynamic(jogador/1).
 :-dynamic(visitados/1).
 visitados(0).
-jogador(e).
-estado_inicial((0,0,[1,7,6,6,5,1,5,5,0,6,5,1])).
-%estado_atual((0,0,[4,4,4,4,4,4,4,4,4,4,4,4])).
+
+jogador(p1).
+
+estado_inicial([0,0,[4,4,4,4,4,4,4,4,4,4,4,4]]).
+
 
 joga(Op, V) :-  
 	asserta(visitados(0)),
@@ -17,22 +18,16 @@ joga(Op, V) :-
 
 % se é estado terminal não há jogada 
 alfabeta(Ei,terminou) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
     terminal(Ei).
 
 % Nota: vai buscar o jogador ao J
 alfabeta(Ei,Opf,J) :- 
-	findall(Vc-Op, (oper(Ei,J,Op,Es), alfabeta_min(Es,Vc,1,-10000,10000)), L),
+	findall(Vc-Op, (oper(Ei,J,Op,Es), alfabeta_min(Es,Vc,0,-10000,10000)), L),
 	escolhe_max(L,Opf).
 
 % se um estado é terminal o valor é dado pela função de utilidade
-% Nota: assume que o jogador é o "e" onde???
+% Nota: assume que o jogador é o "e"
 alfabeta_min(Ei,Val,_,_,_) :- 
-	retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
 	terminal(Ei), 
 	valor(Ei,Val), !.
 
@@ -71,8 +66,8 @@ max(A,B,B) :- A < B, !.
 max(A, _, A).
 
 % jogador "e" nas jogadas impares e jogador "d" nas jogadas pares
-jogador(P, d) :- X is P mod 2, X = 0.
-jogador(P, e) :- X is P mod 2, X = 1.
+jogador(P, p1) :- X is P mod 2, X = 0.
+jogador(P, p2) :- X is P mod 2, X = 1.
 
 % Se a profundidade (P) é par, retorna em Val o maximo de V
 seleciona_valor(V,P,Val) :- 
