@@ -1,10 +1,9 @@
-:-dynamic(jogador/1).
 :-dynamic(visitados/1).
 visitados(0).
 
-jogador(p).
-estado_atual((23,0,[4,4,4,4,4,4,1,1,1,1,1,1])).
-estado_inicial((23,0,[4,4,4,4,4,4,1,1,1,1,1,1])).
+jogador(p1).
+
+estado_inicial([0,0,[4,4,4,4,4,4,4,4,4,4,4,4]]).
 
 
 joga(Op, V) :-  
@@ -19,9 +18,6 @@ joga(Op, V) :-
 
 % se é estado terminal não há jogada 
 alfabeta(Ei,terminou) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
     terminal(Ei).
 
 % Nota: vai buscar o jogador ao J
@@ -30,11 +26,8 @@ alfabeta(Ei,Opf,J) :-
 	escolhe_max(L,Opf).
 
 % se um estado é terminal o valor é dado pela função de utilidade
-% Nota: assume que o jogador é o "e" onde???
+% Nota: assume que o jogador é o "e"
 alfabeta_min(Ei,Val,_,_,_) :- 
-	retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
 	terminal(Ei), 
 	valor(Ei,Val), !.
 
@@ -73,8 +66,8 @@ max(A,B,B) :- A < B, !.
 max(A, _, A).
 
 % jogador "e" nas jogadas impares e jogador "d" nas jogadas pares
-jogador(P, s) :- X is P mod 2, X = 0.
-jogador(P, p) :- X is P mod 2, X = 1.
+jogador(P, p1) :- X is P mod 2, X = 0.
+jogador(P, p2) :- X is P mod 2, X = 1.
 
 % Se a profundidade (P) é par, retorna em Val o maximo de V
 seleciona_valor(V,P,Val) :- 

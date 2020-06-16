@@ -2,11 +2,11 @@
 
 
 :-dynamic(estado_inicial/1).
-:dynamic(jogador/1).
+:-dynamic(jogador/1).
 
 
-estado_inicial([P1, P2, [4,4,4,4,4,4,4,4,4,4,4,4]]).
-jogador(p1).
+%estado_inicial([0, 0, [4,4,4,4,4,4,4,4,4,4,4,4]]).
+%jogador(p1).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,10 +23,8 @@ terminal([_, X| _]) :-
 
 
 % VALORES
-valor([X|_], 1000) :- X @> 24, jogador(p1).
-valor([_,X|_], 1000) :- X @> 24, jogador(p2).
-valor([X|_], -1000) :- X @> 24, jogador(p2).
-valor([_,X|_], -1000) :- X @> 24, jogador(p2).
+valor([X|_], 1) :- X @> 24.
+valor([X|_], -1) :- X @> 24.
 valor(_, 0).
 
 
@@ -38,6 +36,7 @@ valor(_, 0).
 
 
 soma_a_lista([], _, []).
+soma_a_lista(L, 0, L).
 soma_a_lista([H1|T1], X, [H2|T2]) :-
     H2 is H1 + X,
     soma_a_lista(T1, X, T2).
@@ -46,23 +45,23 @@ soma_resto(L, 0, L).
 soma_resto([H|T1], R, [H1|T2]) :-
     H1 is H + 1,
     R1 is R - 1,
-    soma_resto(T1, R1, T2).
+    soma_resto(T1, R1, T2),!.
 
 
-% 1 2 3 4 5 6 7 8 9 10 11 12
+% A B C D E F G H I J K L
 
-% 2 3 4 5 6 7 8 9 10 11 12
-% 3 4 5 6 7 8 9 10 11 12 1
-% 4 5 6 7 8 9 10 11 12 1 2
-% 5 6 7 8 9 10 11 12 1 2 3
-% 6 7 8 9 10 11 12 1 2 3 4
-% 7 8 9 10 11 12 1 2 3 4 5
-% 8 9 10 11 12 1 2 3 4 5 6
-% 9 10 11 12 1 2 3 4 5 6 7
-% 10 11 12 1 2 3 4 5 6 7 8
-% 11 12 1 2 3 4 5 6 7 8 9
-% 12 1 2 3 4 5 6 7 8 9 10
-% 1 2 3 4 5 6 7 8 9 10 11
+% B C D E F G H I J K L
+% C D E F G H I J K L A
+% D E F G H I J K L A B
+% E F G H I J K L A B C
+% F G H I J K L A B C D
+% G H I J K L A B C D E
+% H I J K L A B C D E F
+% I J K L A B C D E F G
+% J K L A B C D E F G H
+% K L A B C D E F G H I
+% L A B C D E F G H I J
+% A B C D E F G H I J K
 
 dividir([_,B,C,D,E,F,G,H,I,J,K,L], 1,  [B,C,D,E,F,G,H,I,J,K,L]).
 dividir([A,_,C,D,E,F,G,H,I,J,K,L], 2,  [C,D,E,F,G,H,I,J,K,L,A]).
@@ -78,16 +77,16 @@ dividir([A,B,C,D,E,F,G,H,I,J,_,L], 11, [L,A,B,C,D,E,F,G,H,I,J]).
 dividir([A,B,C,D,E,F,G,H,I,J,K,_], 12, [A,B,C,D,E,F,G,H,I,J,K]).
 
 insere_zero([B,C,D,E,F,G,H,I,J,K,L], 1,  [0,B,C,D,E,F,G,H,I,J,K,L]).
-insere_zero([A,C,D,E,F,G,H,I,J,K,L], 2,  [A,0,C,D,E,F,G,H,I,J,K,L]).
-insere_zero([A,B,D,E,F,G,H,I,J,K,L], 3,  [A,B,0,D,E,F,G,H,I,J,K,L]).
-insere_zero([A,B,C,E,F,G,H,I,J,K,L], 4,  [A,B,C,0,E,F,G,H,I,J,K,L]).
-insere_zero([A,B,C,D,F,G,H,I,J,K,L], 5,  [A,B,C,D,0,F,G,H,I,J,K,L]).
-insere_zero([A,B,C,D,E,G,H,I,J,K,L], 6,  [A,B,C,D,E,0,G,H,I,J,K,L]).
-insere_zero([A,B,C,D,E,F,H,I,J,K,L], 7,  [A,B,C,D,E,F,0,H,I,J,K,L]).
-insere_zero([A,B,C,D,E,F,G,I,J,K,L], 8,  [A,B,C,D,E,F,G,0,I,J,K,L]).
-insere_zero([A,B,C,D,E,F,G,H,J,K,L], 9,  [A,B,C,D,E,F,G,H,0,J,K,L]).
-insere_zero([A,B,C,D,E,F,G,H,I,K,L], 10, [A,B,C,D,E,F,G,H,I,0,K,L]).
-insere_zero([A,B,C,D,E,F,G,H,I,J,L], 11, [A,B,C,D,E,F,G,H,I,J,0,L]).
+insere_zero([C,D,E,F,G,H,I,J,K,L,A], 2,  [A,0,C,D,E,F,G,H,I,J,K,L]).
+insere_zero([D,E,F,G,H,I,J,K,L,A,B], 3,  [A,B,0,D,E,F,G,H,I,J,K,L]).
+insere_zero([E,F,G,H,I,J,K,L,A,B,C], 4,  [A,B,C,0,E,F,G,H,I,J,K,L]).
+insere_zero([F,G,H,I,J,K,L,A,B,C,D], 5,  [A,B,C,D,0,F,G,H,I,J,K,L]).
+insere_zero([G,H,I,J,K,L,A,B,C,D,E], 6,  [A,B,C,D,E,0,G,H,I,J,K,L]).
+insere_zero([H,I,J,K,L,A,B,C,D,E,F], 7,  [A,B,C,D,E,F,0,H,I,J,K,L]).
+insere_zero([I,J,K,L,A,B,C,D,E,F,G], 8,  [A,B,C,D,E,F,G,0,I,J,K,L]).
+insere_zero([J,K,L,A,B,C,D,E,F,G,H], 9,  [A,B,C,D,E,F,G,H,0,J,K,L]).
+insere_zero([K,L,A,B,C,D,E,F,G,H,I], 10, [A,B,C,D,E,F,G,H,I,0,K,L]).
+insere_zero([L,A,B,C,D,E,F,G,H,I,J], 11, [A,B,C,D,E,F,G,H,I,J,0,L]).
 insere_zero([A,B,C,D,E,F,G,H,I,J,K], 12, [A,B,C,D,E,F,G,H,I,J,K,0]).
 
 ultima(X, Resto, 12) :-
@@ -107,20 +106,20 @@ distribui([P1, P2, Tb], Pos, [P1, P2, Tbn], U) :-
     soma_resto(B, R, C),
     insere_zero(C, Pos, Tbn).
 
-% 1 2 3 4 5 6 | 7 8 9 10 11 12
+% A B C D E F | G H I J K L
 
-% 1 12 11 10 9 8 7 6 5 4 3 2
-% 2 1 12 11 10 9 8 7 6 5 4 3
-% 3 2 1 12 11 10 9 8 7 6 5 4
-% 4 3 2 1 12 11 10 9 8 7 6 5
-% 5 4 3 2 1 12 11 10 9 8 7 6
-% 6 5 4 3 2 1 12 11 10 9 8 7
-% 7 6 5 4 3 2 1 12 11 10 9 8
-% 8 7 6 5 4 3 2 1 12 11 10 9
-% 9 8 7 6 5 4 3 2 1 12 11 10
-% 10 9 8 7 6 5 4 3 2 1 12 11
-% 11 10 9 8 7 6 5 4 3 2 1 12
-% 12 11 10 9 8 7 6 5 4 3 2 1
+% A L K J I H G F E D C B
+% B A L K J I H G F E D C
+% C B A L K J I H G F E D
+% D C B A L K J I H G F E
+% E D C B A L K J I H G F
+% F E D C B A L K J I H G
+% G F E D C B A L K J I H
+% H G F E D C B A L K J I
+% I H G F E D C B A L K J
+% J I H G F E D C B A L K
+% K J I H G F E D C B A L
+% L K J I H G F E D C B A
 
 inverte([A,B,C,D,E,F,G,H,I,J,K,L], 1,  [A,L,K,J,I,H,G,F,E,D,C,B]).
 inverte([A,B,C,D,E,F,G,H,I,J,K,L], 2,  [B,A,L,K,J,I,H,G,F,E,D,C]).
@@ -135,27 +134,35 @@ inverte([A,B,C,D,E,F,G,H,I,J,K,L], 10, [J,I,H,G,F,E,D,C,B,A,L,K]).
 inverte([A,B,C,D,E,F,G,H,I,J,K,L], 11, [K,J,I,H,G,F,E,D,C,B,A,L]).
 inverte([A,B,C,D,E,F,G,H,I,J,K,L], 12, [L,K,J,I,H,G,F,E,D,C,B,A]).
 
+
 captura_aux([], 0, []).
 captura_aux([0|T], 0, [0|T]).
 captura_aux([X|T], 0, [X|T]) :- X @> 3.
-captura_aux([X|T], P, [0|T]) :- 
-    captura_aux(T, A),
+captura_aux([X|T1], P, [0|T2]) :- 
+    captura_aux(T1, A, T2),
     P is X + A.
 
-captura([P1, P2, Tab], U, [P1, P2, Tabn], P) :-
+captura([P1, P2, Tab], X, U, [P1n, P2, Tabn]) :-
+    X @=< 6,
+    U @> 6,
     inverte(Tab, U, A),
-    captura_aux(A, P, Tabn).
+    captura_aux(A, P, B),
+    P1n is P1 + P,
+    inverte(Tabn, U, B).
 
-calcula_pontos([P1, P2, Tab], Pos, [P1n, P2, Tabn]) :-
-    Pos @< 6,!,
-    distribui([P1, P2, Tab], Pos, A, U),
-    captura(A, U, [_, _, Tabn], P),
-    P1n is P1 + P.
-calcula_pontos([P1, P2, Tab], Pos, [P1, P2n, Tabn]) :-
-    distribui([P1, P2, Tab], Pos, A, U),
-    captura(A, U, [_, _, Tabn], P),
-    P2n is P2 + P.
+captura([P1, P2, Tab], X, U, [P1, P2n, Tabn]) :-
+    X @> 6,
+    U @=< 6,
+    inverte(Tab, U, A),
+    captura_aux(A, P, B),
+    P2n is P2 + P,
+    inverte(Tabn, U, B).
 
+captura(E, _, _, E, 0).
+
+calcula_pontos(Ei, Pos, Ef) :-
+    distribui(Ei, Pos, A, U),
+    captura(A, Pos, U, Ef).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -165,15 +172,15 @@ calcula_pontos([P1, P2, Tab], Pos, [P1, P2n, Tabn]) :-
 
 
 tab_1([A,B,C,D,E,F|_], [A,B,C,D,E,F]).
-tab_2([A,B,C,D,E,F|T], T).
+tab_2([_,_,_,_,_,_|T], T).
 
 % verifica se a jogada e valida
 jogada_valida_aux(Tab, X, M) :-
-    M @> 1,!,
-    nth1(Tab, X, Val),
+    M @> 1,
+    nth1(X, Tab, Val),
     Val @> 1.
 jogada_valida_aux(Tab, X, 1) :-
-    nth1(Tab, X, 1).
+    nth1(X, Tab, 1).
 
 % verifica para o lado do primeiro jogador
 jogada_valida_1(Tab, X) :-
@@ -196,29 +203,93 @@ jogada_valida_2(Tab, X) :-
 
 
 % X = 1
-oper([P1, P2, Tab], p1, 1, En) :-
-    jogada_valida_1(Tab, 1),!,
+op([P1, P2, Tab], p1, 1, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_1(Tab, 1),
     calcula_pontos([P1, P2, Tab], 1, En).
 % X = 2
-oper([P1, P2, Tab], p, 2, En) :-
-    jogada_valida_1(Tab, 2),!,
+op([P1, P2, Tab], p1, 2, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_1(Tab, 2),
     calcula_pontos([P1, P2, Tab], 2, En).
-% X = 1
-oper([P1, P2, Tab], p, 1, En) :-
-    jogada_valida_1(Tab, 1),!,
-    calcula_pontos([P1, P2, Tab], 1, En).
-% X = 1
-oper([P1, P2, Tab], p, 1, En) :-
-    jogada_valida_1(Tab, 1),!,
-    calcula_pontos([P1, P2, Tab], 1, En).
-% X = 1
-oper([P1, P2, Tab], p, 1, En) :-
-    jogada_valida_1(Tab, 1),!,
-    calcula_pontos([P1, P2, Tab], 1, En).
-% X = 1
-oper([P1, P2, Tab], p, 1, En) :-
-    jogada_valida_1(Tab, 1),!,
-    calcula_pontos([P1, P2, Tab], 1, En).
+% X = 3
+op([P1, P2, Tab], p1, 3, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_1(Tab, 3),
+    calcula_pontos([P1, P2, Tab], 3, En).
+% X = 4
+op([P1, P2, Tab], p1, 4, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_1(Tab, 4),
+    calcula_pontos([P1, P2, Tab], 4, En).
+% X = 5
+op([P1, P2, Tab], p1, 5, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_1(Tab, 5),
+    calcula_pontos([P1, P2, Tab], 5, En).
+% X = 6
+op([P1, P2, Tab], p1, 6, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_1(Tab, 6),
+    calcula_pontos([P1, P2, Tab], 6, En).
+% X = 7
+op([P1, P2, Tab], p2, 7, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_2(Tab, 1),
+    calcula_pontos([P1, P2, Tab], 7, En).
+% X = 8
+op([P1, P2, Tab], p2, 8, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_2(Tab, 2),
+    calcula_pontos([P1, P2, Tab], 8, En).
+% X = 9
+op([P1, P2, Tab], p2, 9, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_2(Tab, 3),
+    calcula_pontos([P1, P2, Tab], 9, En).
+% X = 10
+op([P1, P2, Tab], p2, 10, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_2(Tab, 4),
+    calcula_pontos([P1, P2, Tab], 10, En).
+% X = 11
+op([P1, P2, Tab], p2, 11, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_2(Tab, 5),
+    calcula_pontos([P1, P2, Tab], 11, En).
+% X = 12
+op([P1, P2, Tab], p2, 12, En) :-
+    retract(visitados(V)),
+    V1 is V + 1,
+    asserta(visitados(V1)),
+    jogada_valida_2(Tab, 6),
+    calcula_pontos([P1, P2, Tab], 12, En).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+oper(Ei, J, X, En) :-
+    op(Ei, J, X, En).
