@@ -89,12 +89,12 @@ insere_zero([K,L,A,B,C,D,E,F,G,H,I], 10, [A,B,C,D,E,F,G,H,I,0,K,L]).
 insere_zero([L,A,B,C,D,E,F,G,H,I,J], 11, [A,B,C,D,E,F,G,H,I,J,0,L]).
 insere_zero([A,B,C,D,E,F,G,H,I,J,K], 12, [A,B,C,D,E,F,G,H,I,J,K,0]).
 
-ultima(X, Resto, 12) :-
-    Soma is X + Resto,
-    0 is mod(Soma, 12).
+
 ultima(X, Resto, U) :-
     Soma is X + Resto,
-    U is mod(Soma, 12).
+    U is mod(Soma, 12),
+    U \= 0.
+ultima(_, _, 12).
 
 distribui([P1, P2, Tb], Pos, [P1, P2, Tbn], U) :-
     nth1(Pos, Tb, Val),
@@ -104,7 +104,7 @@ distribui([P1, P2, Tb], Pos, [P1, P2, Tbn], U) :-
     ultima(Pos, R, U),
     soma_a_lista(A, Q, B),
     soma_resto(B, R, C),
-    insere_zero(C, Pos, Tbn).
+    insere_zero(C, Pos, Tbn),!.
 
 % A B C D E F | G H I J K L
 
@@ -148,25 +148,20 @@ captura([P1, P2, Tab], X, U, [P1n, P2, Tabn]) :-
     inverte(Tab, U, A),
     captura_aux(A, P, B),
     P1n is P1 + P,
-    inverte(Tabn, U, B).
-
+    inverte(Tabn, U, B),!.
 captura([P1, P2, Tab], X, U, [P1, P2n, Tabn]) :-
     X @> 6,
     U @=< 6,
     inverte(Tab, U, A),
     captura_aux(A, P, B),
     P2n is P2 + P,
-    inverte(Tabn, U, B).
+    inverte(Tabn, U, B),!.
+captura(E, _, _, E).
 
-captura(E, _, _, E, 0).
-
-calcula_pontos(Ei, Pos, Ef) :-
-    distribui(Ei, Pos, A, U),
-    captura(A, Pos, U, Ef).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%                               VALIDAR JOGADAS
+%                               EXECUTA JOGADAS
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -174,25 +169,36 @@ calcula_pontos(Ei, Pos, Ef) :-
 tab_1([A,B,C,D,E,F|_], [A,B,C,D,E,F]).
 tab_2([_,_,_,_,_,_|T], T).
 
-% verifica se a jogada e valida
-jogada_valida_aux(Tab, X, M) :-
+
+jogada_1([P1,P2,Tabi], X, Ef) :-
+    tab_1(Tabi, L1),
+    maximo(L1, M),
     M @> 1,
-    nth1(X, Tab, Val),
-    Val @> 1.
-jogada_valida_aux(Tab, X, 1) :-
-    nth1(X, Tab, 1).
+    nth1(X, Tabi, Val),
+    Val @> 1,!,
+    distribui([P1,P2,Tabi], X, En, U),
+    captura(En, X, U, Ef),!.
+jogada_1([P1,P2,Tabi], X, Ef) :-
+    tab_1(Tabi, L1),
+    maximo(L1, 1),
+    nth1(X, Tabi, 1),!,
+    distribui([P1,P2,Tabi], X, En, U),
+    captura(En, X, U, Ef),!.
 
-% verifica para o lado do primeiro jogador
-jogada_valida_1(Tab, X) :-
-    tab_1(Tab, Tab1),
-    maximo(Tab1, M),
-    jogada_valida_aux(Tab1, X, M).
-
-% verifica para o lado do segundo jogador
-jogada_valida_2(Tab, X) :-
-    tab_2(Tab, Tab2),
-    maximo(Tab2, M),
-    jogada_valida_aux(Tab2, X, M).
+jogada_2([P1,P2,Tabi], X, Ef) :-
+    tab_2(Tabi, L2),
+    maximo(L2, M),
+    M @> 1,
+    nth1(X, Tabi, Val),
+    Val @> 1,!,
+    distribui([P1,P2,Tabi], X, En, U),
+    captura(En, X, U, Ef),!.
+jogada_2([P1,P2,Tabi], X, Ef) :-
+    tab_2(Tabi, L2),
+    maximo(L2, 1),
+    nth1(X, Tabi, 1),!,
+    distribui([P1,P2,Tabi], X, En, U),
+    captura(En, X, U, Ef),!.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -204,88 +210,52 @@ jogada_valida_2(Tab, X) :-
 
 % X = 1
 op([P1, P2, Tab], p1, 1, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_1(Tab, 1),
-    calcula_pontos([P1, P2, Tab], 1, En).
+    %write(1),nl,
+    jogada_1([P1, P2, Tab], 1, En).
 % X = 2
 op([P1, P2, Tab], p1, 2, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_1(Tab, 2),
-    calcula_pontos([P1, P2, Tab], 2, En).
+    %write(2),nl,
+    jogada_1([P1, P2, Tab], 2, En).
 % X = 3
 op([P1, P2, Tab], p1, 3, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_1(Tab, 3),
-    calcula_pontos([P1, P2, Tab], 3, En).
+    %write(3),nl,
+    jogada_1([P1, P2, Tab], 3, En).
 % X = 4
 op([P1, P2, Tab], p1, 4, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_1(Tab, 4),
-    calcula_pontos([P1, P2, Tab], 4, En).
+    %write(4),nl,
+    jogada_1([P1, P2, Tab], 4, En).
 % X = 5
 op([P1, P2, Tab], p1, 5, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_1(Tab, 5),
-    calcula_pontos([P1, P2, Tab], 5, En).
+    %write(5),nl,
+    jogada_1([P1, P2, Tab], 5, En).
 % X = 6
 op([P1, P2, Tab], p1, 6, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_1(Tab, 6),
-    calcula_pontos([P1, P2, Tab], 6, En).
+    %write(6),nl,
+    jogada_1([P1, P2, Tab], 6, En).
 % X = 7
 op([P1, P2, Tab], p2, 7, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_2(Tab, 1),
-    calcula_pontos([P1, P2, Tab], 7, En).
+    %write(7),nl,
+    jogada_2([P1, P2, Tab], 7, En).
 % X = 8
 op([P1, P2, Tab], p2, 8, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_2(Tab, 2),
-    calcula_pontos([P1, P2, Tab], 8, En).
+    %write(8),nl,
+    jogada_2([P1, P2, Tab], 8, En).
 % X = 9
 op([P1, P2, Tab], p2, 9, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_2(Tab, 3),
-    calcula_pontos([P1, P2, Tab], 9, En).
+    %write(9),nl,
+    jogada_2([P1, P2, Tab], 9, En).
 % X = 10
 op([P1, P2, Tab], p2, 10, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_2(Tab, 4),
-    calcula_pontos([P1, P2, Tab], 10, En).
+    %write(10),nl,
+    jogada_2([P1, P2, Tab], 10, En).
 % X = 11
 op([P1, P2, Tab], p2, 11, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_2(Tab, 5),
-    calcula_pontos([P1, P2, Tab], 11, En).
+    %write(11),nl,
+    jogada_2([P1, P2, Tab], 11, En).
 % X = 12
 op([P1, P2, Tab], p2, 12, En) :-
-    retract(visitados(V)),
-    V1 is V + 1,
-    asserta(visitados(V1)),
-    jogada_valida_2(Tab, 6),
-    calcula_pontos([P1, P2, Tab], 12, En).
+    %write(12),nl,
+    jogada_2([P1, P2, Tab], 12, En).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
