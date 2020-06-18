@@ -5,16 +5,20 @@ def joga(lista, pos):
     pos -= 1
     #distribui sementes
     valor = lista[pos] #numero sementes
+
     i = pos
-    del lista[pos] #remove as sementes
 
     quociente = int(valor/11)
     resto = valor % 11
 
     #ciclo de distribuicao
     while(valor != 0):
+        if(i == pos):
+            i += 1
         if(i == len(lista)): #wrap
             i = 0
+            if(pos == 0):
+                i = 1
 
         lista[i] += quociente
         valor -= quociente
@@ -25,7 +29,7 @@ def joga(lista, pos):
         i += 1
 
     #adiciona casa vazia
-    lista.insert(pos, 0)
+    lista[pos] = 0
 
     i -= 1 #ultima posicao tocada
 
@@ -44,24 +48,14 @@ def joga(lista, pos):
     
     return lista, pontos
 
-def jogada_prolog(tabuleiro, pos):
-    lista, pontos = joga(tabuleiro, pos)
-    lista_str = str(lista).replace(" ", "") #limpa str para o prolog
-    lista_str = lista_str[1:-1] + "\n" + str(pontos)
-    print(lista_str)
 
 
 if __name__ == '__main__':
-    
-    Pe = int(sys.argv[1])
-    Pd = int(sys.argv[2])
-    tab = sys.argv[3]
-    x = int(sys.argv[4])
 
-    tab = list(tab.split(","))
-    tab = list(map(int, tab))
+    tab = [9, 9, 1, 0, 0, 1, 9, 9, 0, 2, 2, 1]
+    x = 2
 
-    #tab = [2, 1, 1, 0, 8, 7, 7, 7, 2, 7, 1, 3]
-    #x = 12
+    lista , pontos = joga(tab, x)
 
-    jogada_prolog(tab, x)
+    print(pontos)
+    print(lista)

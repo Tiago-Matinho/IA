@@ -12,6 +12,7 @@ def imprime_tabuleiro(tabuleiro):
     print("Tabuleiro: ")
     print(tabuleiro[2:])
 
+
 def argumentos():
     lado = ""
     
@@ -23,14 +24,11 @@ def argumentos():
     return lado
     
 def jogada_bot(tabuleiro, lado):
-    prolog.retractall("estado_atual(_)")
     prolog.retractall("estado_inicial(_)")
 
     tabuleiro_str = str(tabuleiro[2:])
 
-    prolog.asserta("estado_inicial((%d, %d, %s))" %(tabuleiro[0], tabuleiro[1], tabuleiro_str))
-
-    prolog.asserta("estado_atual((%d, %d, %s))" %(tabuleiro[0], tabuleiro[1], tabuleiro_str))
+    prolog.asserta("estado_inicial([%d, %d, %s])" %(tabuleiro[0], tabuleiro[1], tabuleiro_str))
 
     query = list(prolog.query("joga(X,V)"))[0]
     escolhaBot = query['X']
@@ -84,9 +82,9 @@ if __name__ == '__main__':
     lado = argumentos()
 
     if lado:
-        prolog.asserta("jogador(p)")
+        prolog.asserta("jogador(p1)")
     else:
-        prolog.asserta("jogador(s)")
+        prolog.asserta("jogador(p2)")
 
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
 
@@ -100,9 +98,4 @@ if __name__ == '__main__':
 
         if(not lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
-
-        parar = input("parar (s/n)?\n-> ")
-
-        if parar == "s":
-            flag = False
 
