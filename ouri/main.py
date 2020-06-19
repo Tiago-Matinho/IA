@@ -9,17 +9,17 @@ def imprime_tabuleiro(tabuleiro):
     #draw(tabuleiro)
 
 
-def argumentos():
-    lado = ""
-    
-    while lado != "p" and lado != "s":
-        lado = input("Primeiro ou segundo: 'p' ou 's'?\n-> ")
 
-    lado = (lado == "p")
-
-    return lado
-    
 def jogada_bot(tabuleiro, lado):
+    if(lado):
+        if(max(tabuleiro[:6]) == 0):
+            print("Bot escolheu: 0")
+            return tabuleiro
+    else:
+        if(max(tabuleiro[6:]) == 0):
+            print("Bot escolheu: 0")
+            return tabuleiro
+
     prolog.retractall("estado_inicial(_)")
 
     tabuleiro_str = str(tabuleiro[2:])
@@ -77,12 +77,14 @@ if __name__ == '__main__':
     prolog.consult("base.pl")
     prolog.consult("alfabeta.pl")
 
-    lado = argumentos()
+    lado = (sys.argv[1] == "p")
 
     if lado:
         prolog.asserta("jogador(p1)")
+        prolog.consult("1.pl")
     else:
         prolog.asserta("jogador(p2)")
+        prolog.consult("2.pl")
 
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
 

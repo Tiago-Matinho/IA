@@ -31,7 +31,7 @@ def joga(lista, pos):
     #adiciona casa vazia
     lista[pos] = 0
 
-    print(lista)
+    #print(lista)
 
     ultima = i - 1 #ultima posicao tocada
 
@@ -40,14 +40,14 @@ def joga(lista, pos):
             return lista, 0 #nao captura
         lista_aux = lista[6:] #lado do adv
         ultima -= 6
-        print(lista_aux)
-        print(ultima)
+        #print(lista_aux)
+        #print(ultima)
     else:
         if(ultima >= 6):
             return lista, 0
         lista_aux = lista[:6]
-        print(lista_aux)
-        print(ultima)
+        #print(lista_aux)
+        #print(ultima)
     
     #ciclo captura
     cur = lista_aux[ultima]
@@ -72,10 +72,10 @@ if __name__ == '__main__':
 
     tab = [2, 1, 1, 0, 0, 1, 11, 1, 0, 2, 4, 5]
 
-    print(tab)
+    #print(tab)
     x = 11
 
     lista , pontos = joga(tab, x)
 
-    print(pontos)
-    print(lista)
+    #print(pontos)
+    #print(lista)

@@ -16,22 +16,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % REGRAS BASE
-terminal([X|_]) :-
+terminal([X,_,_]) :-
     X @> 24.
-terminal([_, X| _]) :-
+terminal([_, X, _]) :-
     X @> 24.
 terminal([_,_,[0,0,0,0,0,0,0,0,0,0,0,0]]).
+terminal([_,_,[0,0,0,0,0,0,0,0,0,0,0,0]]).
 
-
-% VALORES
-%para p1
-%valor([X|_], 10) :- X @> 24.
-%valor([_,Y|_], -10) :- Y @> 24.
-%valor([X,Y|_], 0) :- X @<24, Y @<24.
-
-valor([X,_,_], X).
-valor([_,Y,_], -Y).
-valor([_,_,_], 0).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -128,9 +119,8 @@ distribui([P1, P2, Tb], Pos, [P1, P2, Tbn], U) :-
 %L K J I H G 	12
 
 captura_aux([], 0, []).
-captura_aux([0|T], 0, [0|T]).
+captura_aux([X|T], 0, [X|T]) :- X @< 2.
 captura_aux([X|T], 0, [X|T]) :- X @> 3.
-captura_aux([1|T], 0, [1|T]).
 captura_aux([X|T1], P, [0|T2]) :-
     between(2, 3, X),
     captura_aux(T1, A, T2),
@@ -174,7 +164,7 @@ captura(E, _, _, E).
 regra_2_p1([P1, P2, Tab], [P1n, P2n, Tabn]) :-
     tab_2(Tab, TabAdv),                 % Verifica se o lado do adversário ficou
     maximo(TabAdv, 0),!,                % sem jogadas
-    op([P1,P2,Tab],p2,_,[P1n,P2n,Tabn]),% Faz outra jogada (ponto de retorno do bt) 
+    op([P1,P2,Tab],p1,_,[P1n,P2n,Tabn]),% Faz outra jogada (ponto de retorno do bt) 
     tab_2(Tabn, TabnAdv),               % O novo lado do adversário tem que ter
     \+ maximo(TabnAdv, 0).              % jogadas possiveis
 regra_2_p1([P1, P2, Tab], [P1, P2, Tab]) :-
@@ -216,8 +206,11 @@ jogada_1([P1,P2,Tabi], X, Ef) :-
     nth1(X, Tabi, Val),
     Val @> 1,!,
     distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    % se o tabuleiro do adv tem algo maior q 0 se nao tive a jogada n é valida completar a regra 1
+    tab2(Tabn, L2n),
+    \+ maximo(L2n, 0),!,
+    regra_2_p1([P1n, P2n, Tabn], Ef),!.
 jogada_1([P1,P2,Tabi], X, Ef) :-
     tab_2(Tabi, L2),
     maximo(L2, 0),          % O adversario nao tem como jogar (Regra supl 1)
@@ -225,8 +218,10 @@ jogada_1([P1,P2,Tabi], X, Ef) :-
     maximo(L1, 1),
     nth1(X, Tabi, 1),!,
     distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab2(Tabn, L2n),
+    \+ maximo(L2n, 0),!,
+    regra_2_p1([P1n, P2n, Tabn], Ef),!.
 
 jogada_1([P1,P2,Tabi], X, Ef) :-            % Existe casas com sementes > 1
     tab_1(Tabi, L1),                        % A casa escolhida é uma dessas
@@ -257,17 +252,21 @@ jogada_2([P1,P2,Tabi], X, Ef) :-
     nth1(X, Tabi, Val),
     Val @> 1,!,
     distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab1(Tabn, L1n),
+    \+ maximo(L1n, 0),!,
+    regra_2_p2([P1n, P2n, Tabn], Ef),!.
 jogada_2([P1,P2,Tabi], X, Ef) :-
     tab_1(Tabi, L1),
     maximo(L1, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L2),                        % A casa escolhida tem uma semente
+    tab_2(Tabi, L2),                        % A casa escolhida tem uma semente
     maximo(L2, 1),
     nth1(X, Tabi, 1),!,
     distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab1(Tabn, L1n),
+    \+ maximo(L1n, 0),!,
+    regra_2_p2([P1n, P2n, Tabn], Ef),!.
 % Jogadas para o segundo jogador
 jogada_2([P1,P2,Tabi], X, Ef) :-            
     tab_2(Tabi, L2),                        
@@ -296,51 +295,39 @@ jogada_2([P1,P2,Tabi], X, Ef) :-
 
 % X = 1
 op([P1, P2, Tab], p1, 1, En) :-
-    %write(1),nl,
     jogada_1([P1, P2, Tab], 1, En).
 % X = 2
 op([P1, P2, Tab], p1, 2, En) :-
-    %write(2),nl,
     jogada_1([P1, P2, Tab], 2, En).
 % X = 3
 op([P1, P2, Tab], p1, 3, En) :-
-    %write(3),nl,
     jogada_1([P1, P2, Tab], 3, En).
 % X = 4
 op([P1, P2, Tab], p1, 4, En) :-
-    %write(4),nl,
     jogada_1([P1, P2, Tab], 4, En).
 % X = 5
 op([P1, P2, Tab], p1, 5, En) :-
-    %write(5),nl,
     jogada_1([P1, P2, Tab], 5, En).
 % X = 6
 op([P1, P2, Tab], p1, 6, En) :-
-    %write(6),nl,
     jogada_1([P1, P2, Tab], 6, En).
 % X = 7
 op([P1, P2, Tab], p2, 7, En) :-
-    %write(7),nl,
     jogada_2([P1, P2, Tab], 7, En).
 % X = 8
 op([P1, P2, Tab], p2, 8, En) :-
-    %write(8),nl,
     jogada_2([P1, P2, Tab], 8, En).
 % X = 9
 op([P1, P2, Tab], p2, 9, En) :-
-    %write(9),nl,
     jogada_2([P1, P2, Tab], 9, En).
 % X = 10
 op([P1, P2, Tab], p2, 10, En) :-
-    %write(10),nl,
     jogada_2([P1, P2, Tab], 10, En).
 % X = 11
 op([P1, P2, Tab], p2, 11, En) :-
-    %write(11),nl,
     jogada_2([P1, P2, Tab], 11, En).
 % X = 12
 op([P1, P2, Tab], p2, 12, En) :-
-    %write(12),nl,
     jogada_2([P1, P2, Tab], 12, En).
 
 
