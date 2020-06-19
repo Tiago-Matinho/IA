@@ -1,16 +1,11 @@
 import sys
 from pyswip import Prolog
 from joga import joga
-
+from tab import draw
 
 
 def imprime_tabuleiro(tabuleiro):
-    print("Pontos esquerda: ")
-    print(tabuleiro[0])
-    print("Pontos direita: ")
-    print(tabuleiro[1])
-    print("Tabuleiro: ")
-    print(tabuleiro[2:])
+    draw(tabuleiro)
 
 
 def argumentos():
@@ -76,7 +71,7 @@ def jogada_adv(tabuleiro, lado):
 
 if __name__ == '__main__':
     prolog = Prolog()
-    prolog.consult("teste.pl")
+    prolog.consult("base.pl")
     prolog.consult("alfabeta.pl")
 
     lado = argumentos()

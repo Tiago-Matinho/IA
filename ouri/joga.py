@@ -33,18 +33,32 @@ def joga(lista, pos):
 
     i -= 1 #ultima posicao tocada
 
-    if(pos < 6 and i < 6) or (pos >= 6 and i >= 6):
-        return lista, 0
+    # //TODO isto é retardado!!!  //FIXME
+    # sem captura
+    if(pos < 6):
+        if(i < 6):
+            return lista, 0
+        lista_aux = lista[6:]
+    elif(pos >= 6):
+        if(i >= 6):
+            return lista, 0
+        lista_aux = lista[:6]
+        i -= 6
 
-    #captura
     pontos = 0
+
     #ciclo de captura
-    while(lista[i] == 2 or lista[i] == 3):
-        pontos += lista[i]
-        lista[i] = 0
+    while(lista_aux[i] == 2 or lista_aux[i] == 3):
+        pontos += lista_aux[i]
+        lista_aux[i] = 0
         i -= 1
-        if(i == -1): #wrap
-            i = len(lista) - 1
+        if(i == -1):
+            break
+
+    if(pos < 6):
+        lista = lista[:6] + lista_aux
+    else:
+        lista = lista_aux + lista[6:]
     
     return lista, pontos
 

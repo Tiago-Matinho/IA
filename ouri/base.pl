@@ -5,8 +5,8 @@
 :-dynamic(jogador/1).
 
 
-%estado_inicial([0, 0, [4,4,4,4,4,4,4,4,4,4,4,4]]).
-%jogador(p1).
+estado_inicial([0, 5, [9,9,1,0,0,1,9,9,0,2,2,1]]).
+jogador(p1).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,34 +107,21 @@ distribui([P1, P2, Tb], Pos, [P1, P2, Tbn], U) :-
     soma_resto(B, R, C),
     insere_zero(C, Pos, Tbn),!.
 
-% A B C D E F | G H I J K L
 
-% A L K J I H G F E D C B
-% B A L K J I H G F E D C
-% C B A L K J I H G F E D
-% D C B A L K J I H G F E
-% E D C B A L K J I H G F
-% F E D C B A L K J I H G
-% G F E D C B A L K J I H
-% H G F E D C B A L K J I
-% I H G F E D C B A L K J
-% J I H G F E D C B A L K
-% K J I H G F E D C B A L
-% L K J I H G F E D C B A
-
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 1,  [A,L,K,J,I,H,G,F,E,D,C,B]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 2,  [B,A,L,K,J,I,H,G,F,E,D,C]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 3,  [C,B,A,L,K,J,I,H,G,F,E,D]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 4,  [D,C,B,A,L,K,J,I,H,G,F,E]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 5,  [E,D,C,B,A,L,K,J,I,H,G,F]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 6,  [F,E,D,C,B,A,L,K,J,I,H,G]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 7,  [G,F,E,D,C,B,A,L,K,J,I,H]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 8,  [H,G,F,E,D,C,B,A,L,K,J,I]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 9,  [I,H,G,F,E,D,C,B,A,L,K,J]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 10, [J,I,H,G,F,E,D,C,B,A,L,K]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 11, [K,J,I,H,G,F,E,D,C,B,A,L]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 12, [L,K,J,I,H,G,F,E,D,C,B,A]).
-
+%
+%A 				1
+%B A 			2
+%C B A 			3
+%D C B A 		4
+%E D C B A 		5
+%F E D C B A 	6
+%
+%G				7
+%H G			8
+%I H G			9
+%J I H G		10
+%K J I H G		11
+%L K J I H G 	12
 
 captura_aux([], 0, []).
 captura_aux([0|T], 0, [0|T]).
@@ -144,20 +131,31 @@ captura_aux([X|T1], P, [0|T2]) :-
     captura_aux(T1, A, T2),
     P is X + A.
 
+
+inverte([A|T], 1, [An|T], P) :- captura_aux([A], P, [An]).
+inverte([A,B|T], 2, [An,Bn|T], P) :- captura_aux([B,A], P, [Bn,An]).
+inverte([A,B,C|T], 3, [An,Bn,Cn|T], P) :- captura_aux([C,B,A], P, [Cn,Bn,An]).
+inverte([A,B,C,D|T], 4, [An,Bn,Cn,Dn|T], P) :- captura_aux([D,C,B,A], P, [Dn,Cn,Bn,An]).
+inverte([A,B,C,D,E|T], 5, [An,Bn,Cn,Dn,En|T], P) :- captura_aux([E,D,C,B,A], P, [En,Dn,Cn,Bn,An]).
+inverte([A,B,C,D,E,F|T], 6, [An,Bn,Cn,Dn,En,Fn|T], P) :- captura_aux([F,E,D,C,B,A], P, [Fn,En,Dn,Cn,Bn,An]).
+inverte([A,B,C,D,E,F,G|T], 7, [A,B,C,D,E,F,Gn|T], P) :- captura_aux([G], P, [Gn]).
+inverte([A,B,C,D,E,F,G,H|T], 8, [A,B,C,D,E,F,Gn,Hn|T], P) :- captura_aux([H,G], P, [Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I|T], 9, [A,B,C,D,E,F,Gn,Hn,In|T], P) :- captura_aux([I,H,G], P, [In,Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I,J|T], 10, [A,B,C,D,E,F,Gn,Hn,In,Jn|T], P) :- captura_aux([J,I,H,G], P, [Jn,In,Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I,J,K|T], 11, [A,B,C,D,E,F,Gn,Hn,In,Jn,Kn|T], P) :- captura_aux([K,J,I,H,G], P, [Kn,Jn,In,Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I,J,K,L], 12, [A,B,C,D,E,F,Gn,Hn,In,Jn,Kn,Ln], P) :- captura_aux([L,K,J,I,H,G], P, [Ln,Kn,Jn,In,Hn,Gn]).
+
+
 captura([P1, P2, Tab], X, U, [P1n, P2, Tabn]) :-
     X @=< 6,
     U @> 6,
-    inverte(Tab, U, A),
-    captura_aux(A, P, B),
-    P1n is P1 + P,
-    inverte(Tabn, U, B),!.
+    inverte(Tab, U, Tabn, P),
+    P1n is P1 + P,!.
 captura([P1, P2, Tab], X, U, [P1, P2n, Tabn]) :-
     X @> 6,
     U @=< 6,
-    inverte(Tab, U, A),
-    captura_aux(A, P, B),
-    P2n is P2 + P,
-    inverte(Tabn, U, B),!.
+    inverte(Tab, U, Tabn, P),
+    P2n is P2 + P,!.
 captura(E, _, _, E).
 
 
