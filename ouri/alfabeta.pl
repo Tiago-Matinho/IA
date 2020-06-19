@@ -1,14 +1,15 @@
 :-dynamic(visitados/1).
 :-dynamic(profundidade/1).
 
-profundidade(7).
+profundidade(6).
 
 
-joga(Op, V) :-  
+joga(Op, V, Ef) :-  
 	asserta(visitados(0)),
 	estado_inicial(Ei),
 	jogador(J),
 	alfabeta(Ei, Op, J),
+	op(Ei, p1, Op, Ef),
 	visitados(V), !.
 
 % decide qual é a melhor jogada num estado do jogo

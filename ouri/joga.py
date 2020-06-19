@@ -31,43 +31,49 @@ def joga(lista, pos):
     #adiciona casa vazia
     lista[pos] = 0
 
-    i -= 1 #ultima posicao tocada
+    print(lista)
 
-    # //TODO isto é retardado!!!  //FIXME
-    # sem captura
+    ultima = i - 1 #ultima posicao tocada
+
     if(pos < 6):
-        if(i < 6):
-            return lista, 0
-        lista_aux = lista[6:]
-    elif(pos >= 6):
-        if(i >= 6):
+        if(ultima < 6):
+            return lista, 0 #nao captura
+        lista_aux = lista[6:] #lado do adv
+        ultima -= 6
+        print(lista_aux)
+        print(ultima)
+    else:
+        if(ultima >= 6):
             return lista, 0
         lista_aux = lista[:6]
-        i -= 6
-
+        print(lista_aux)
+        print(ultima)
+    
+    #ciclo captura
+    cur = lista_aux[ultima]
     pontos = 0
 
-    #ciclo de captura
-    while(lista_aux[i] == 2 or lista_aux[i] == 3):
-        pontos += lista_aux[i]
-        lista_aux[i] = 0
-        i -= 1
-        if(i == -1):
+    while(cur == 2 or cur == 3):
+        pontos += cur
+        lista_aux[ultima] = 0
+        ultima -= 1
+        if(ultima == -1):
             break
+        cur = lista_aux[ultima]
 
     if(pos < 6):
-        lista = lista[:6] + lista_aux
+        ret = lista[:6] + lista_aux
     else:
-        lista = lista_aux + lista[6:]
-    
-    return lista, pontos
+        ret = lista_aux + lista[6:]
 
-
+    return ret, pontos
 
 if __name__ == '__main__':
 
-    tab = [9, 9, 1, 0, 0, 1, 9, 9, 0, 2, 2, 1]
-    x = 2
+    tab = [2, 1, 1, 0, 0, 1, 11, 1, 0, 2, 4, 5]
+
+    print(tab)
+    x = 11
 
     lista , pontos = joga(tab, x)
 

@@ -5,7 +5,8 @@ from tab import draw
 
 
 def imprime_tabuleiro(tabuleiro):
-    draw(tabuleiro)
+    print("Estado python: [" + str(tabuleiro[0]) + ", " + str(tabuleiro[1]) + ", " + str(tabuleiro[2:]) + "]")
+    #draw(tabuleiro)
 
 
 def argumentos():
@@ -25,11 +26,13 @@ def jogada_bot(tabuleiro, lado):
 
     prolog.asserta("estado_inicial([%d, %d, %s])" %(tabuleiro[0], tabuleiro[1], tabuleiro_str))
 
-    query = list(prolog.query("joga(X,V)"))[0]
+    query = list(prolog.query("joga(X,V,E)"))[0]
     escolhaBot = query['X']
     visitados = query['V']
+    estado_prolog = query['E']
 
     print("Bot escolheu: %d depois de visitar %d nós" %(escolhaBot, visitados))
+    print("Estado prolog: " + str(estado_prolog))
 
     tabuleiro_n, pontos = joga(tabuleiro[2:], escolhaBot)
 
@@ -93,4 +96,6 @@ if __name__ == '__main__':
 
         if(not lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
+
+        t = input("continuar?")
 
