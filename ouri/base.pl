@@ -13,7 +13,7 @@ op([0,0,[18, 0, 1, 0, 0, 0, 0, 2, 1, 1, 0, 1]], p1, 1, En), write(En).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%                           TERMINAL E VALORES
+%                                   TERMINAL
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -159,35 +159,6 @@ captura([P1, P2, Tab], X, U, [P1, P2n, Tabn]) :-
     inverte(Tab, U, Tabn, P),
     P2n is P2 + P,!.
 captura(E, _, _, E).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%                               REGRAS SUPLEMENTARES
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%quando o adversário é o jogador 2
-regra_2_p1([P1, P2, Tab], [P1n, P2n, Tabn]) :-
-    tab_2(Tab, TabAdv),                 % Verifica se o lado do adversário ficou
-    maximo(TabAdv, 0),!,                % sem jogadas
-    op([P1,P2,Tab],p1,_,[P1n,P2n,Tabn]),% Faz outra jogada (ponto de retorno do bt) 
-    tab_2(Tabn, TabnAdv),               % O novo lado do adversário tem que ter
-    \+ maximo(TabnAdv, 0).              % jogadas possiveis
-regra_2_p1([P1, P2, Tab], [P1, P2, Tab]) :-
-    tab_2(Tab, TabAdv),
-    \+ maximo(TabAdv, 0).
-    
-%quando o adversário é o jogador 1
-regra_2_p2([P1, P2, Tab], [P1n, P2n, Tabn]) :-
-    tab_1(Tab, TabAdv),                 % Verifica se o lado do adversário ficou
-    maximo(TabAdv, 0),!,                % sem jogadas
-    op([P1,P2,Tab],p2,_,[P1n,P2n,Tabn]),% Faz outra jogada (ponto de retorno do bt) 
-    tab_1(Tabn, TabnAdv),               % O novo lado do adversário tem que ter
-    \+ maximo(TabnAdv, 0).              % jogadas possiveis
-regra_2_p2([P1, P2, Tab], [P1, P2, Tab]) :-
-    tab_1(Tab, TabAdv),
-    \+ maximo(TabAdv, 0).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
