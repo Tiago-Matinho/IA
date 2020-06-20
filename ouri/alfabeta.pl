@@ -1,7 +1,7 @@
 :-dynamic(visitados/1).
 :-dynamic(profundidade/1).
 
-profundidade(7).
+%profundidade(8).
 
 
 joga(Op) :-

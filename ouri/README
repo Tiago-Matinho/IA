@@ -1,0 +1,9 @@
+Para instalar os modulos do python correr "sh install.sh".
+
+Utilização do programa deve ser feita da seguinte forma: "python3 main.py p 2".
+Sendo que o "p" significa que o bot será o primeiro a jogar e o 2 a profundidade a que o algoritmo chega.
+
+Não foi ainda testado para jogar em segundo.
+
+As profundidades 1, 2 e 3 foram testadas.
+

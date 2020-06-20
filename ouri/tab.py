@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 def draw(Tab):
-	
 	boardIm = Image.open('ouri.png')
 	draw = ImageDraw.Draw(boardIm)
 
@@ -29,10 +28,4 @@ def draw(Tab):
 			cord = (cord[0] - 5, cord[1])
 		draw.text(cord, text, fill="black", font=font, align="center")
 
-	boardIm.show()
-	boardIm.save('novaJogada.png')
-
-
-if __name__ == "__main__":
-	tab = [0,0,3,1,0,0,0,0,3,1,0,0,0,0]
-	draw(tab)
+	boardIm.save('Jogada.png')

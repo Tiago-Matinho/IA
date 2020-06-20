@@ -11,6 +11,8 @@ def joga(lista, pos):
     quociente = int(valor/11)
     resto = valor % 11
 
+    ultima = pos - 1
+
     #ciclo de distribuicao
     while(valor != 0):
         if(i == pos):
@@ -26,6 +28,7 @@ def joga(lista, pos):
             lista[i] += 1
             resto -= 1
             valor -= 1
+            ultima = i
         i += 1
 
     #adiciona casa vazia
@@ -33,7 +36,9 @@ def joga(lista, pos):
 
     #print(lista)
 
-    ultima = i - 1 #ultima posicao tocada
+    #ultima = i - 1 #ultima posicao tocada
+
+    #print(ultima)
 
     if(pos < 6):
         if(ultima < 6):
@@ -70,11 +75,12 @@ def joga(lista, pos):
 
 if __name__ == '__main__':
 
-    tab = [18, 0, 1, 0, 0, 0, 0, 2, 1, 1, 0, 1]
+    tab = [9, 3, 1, 0, 2, 1, 1, 12, 11, 0, 0, 0]
+
     #print(tab)
-    x = 1
+    x = 3 + 6
     
     lista , pontos = joga(tab, x)
 
-    #print(pontos)
-    #print(lista)
+    print(pontos)
+    print(lista)
