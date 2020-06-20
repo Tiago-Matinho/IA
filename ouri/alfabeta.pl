@@ -1,20 +1,13 @@
 :-dynamic(visitados/1).
 :-dynamic(profundidade/1).
-visitados(0).
 
 profundidade(7).
 
-%estado_inicial([0,0,[4,4,4,4,4,4,4,4,4,4,4,4]]).
 
-%jogador(p1).
-
-
-joga(Op, V) :-  
-	asserta(visitados(0)),
+joga(Op) :-
 	estado_inicial(Ei),
 	jogador(J),
-	alfabeta(Ei, Op, J),
-	visitados(V), !.
+	alfabeta(Ei, Op, J),!.
 
 % decide qual é a melhor jogada num estado do jogo
 % alfabeta(Estado, MelhorJogada)
@@ -75,12 +68,6 @@ processa_lista_max([H|T], P, V, A, B, V1) :-
 max(A,B,B) :- A < B, !.
 max(A, _, A).
 
-% jogador "e" nas jogadas impares e jogador "d" nas jogadas pares
-%jogador(P, p1) :- X is P mod 2, X = 0.
-%jogador(P, p2) :- X is P mod 2, X = 1.
-%para jogador 1 ^
-jogador(P, p2) :- X is P mod 2, X = 0.
-jogador(P, p1) :- X is P mod 2, X = 1.
 
 % Se a profundidade (P) é par, retorna em Val o maximo de V
 seleciona_valor(V,P,Val) :- 

@@ -5,9 +5,11 @@
 :-dynamic(jogador/1).
 
 
-%estado_inicial([0, 0, [4,4,4,4,4,4,4,4,4,4,4,4]]).
-%jogador(p1).
+estado_inicial([15, 13, [1, 2, 5, 4, 0, 0, 0, 2, 2, 1, 1, 2]]).
+jogador(p1).
 
+trace.
+op([0,0,[18, 0, 1, 0, 0, 0, 0, 2, 1, 1, 0, 1]], p1, 1, En), write(En).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -16,17 +18,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % REGRAS BASE
-terminal([X|_]) :-
+terminal([X,_,_]) :-
     X @> 24.
-terminal([_, X| _]) :-
+terminal([_, X, _]) :-
     X @> 24.
 terminal([_,_,[0,0,0,0,0,0,0,0,0,0,0,0]]).
-
-
-% VALORES
-valor([X|_], 1) :- X @> 24.
-valor([X|_], -1) :- X @> 24.
-valor(_, 0).
+terminal([_,_,[1,0,0,0,0,0,1,0,0,0,0,0]]).
+terminal([_,_,[0,1,0,0,0,0,0,1,0,0,0,0]]).
+terminal([_,_,[0,0,1,0,0,0,0,0,1,0,0,0]]).
+terminal([_,_,[0,0,0,1,0,0,0,0,0,1,0,0]]).
+terminal([_,_,[0,0,0,0,1,0,0,0,0,0,1,0]]).
+terminal([_,_,[0,0,0,0,0,1,0,0,0,0,0,1]]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,57 +109,55 @@ distribui([P1, P2, Tb], Pos, [P1, P2, Tbn], U) :-
     soma_resto(B, R, C),
     insere_zero(C, Pos, Tbn),!.
 
-% A B C D E F | G H I J K L
 
-% A L K J I H G F E D C B
-% B A L K J I H G F E D C
-% C B A L K J I H G F E D
-% D C B A L K J I H G F E
-% E D C B A L K J I H G F
-% F E D C B A L K J I H G
-% G F E D C B A L K J I H
-% H G F E D C B A L K J I
-% I H G F E D C B A L K J
-% J I H G F E D C B A L K
-% K J I H G F E D C B A L
-% L K J I H G F E D C B A
-
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 1,  [A,L,K,J,I,H,G,F,E,D,C,B]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 2,  [B,A,L,K,J,I,H,G,F,E,D,C]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 3,  [C,B,A,L,K,J,I,H,G,F,E,D]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 4,  [D,C,B,A,L,K,J,I,H,G,F,E]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 5,  [E,D,C,B,A,L,K,J,I,H,G,F]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 6,  [F,E,D,C,B,A,L,K,J,I,H,G]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 7,  [G,F,E,D,C,B,A,L,K,J,I,H]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 8,  [H,G,F,E,D,C,B,A,L,K,J,I]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 9,  [I,H,G,F,E,D,C,B,A,L,K,J]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 10, [J,I,H,G,F,E,D,C,B,A,L,K]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 11, [K,J,I,H,G,F,E,D,C,B,A,L]).
-inverte([A,B,C,D,E,F,G,H,I,J,K,L], 12, [L,K,J,I,H,G,F,E,D,C,B,A]).
-
+%
+%A 				1
+%B A 			2
+%C B A 			3
+%D C B A 		4
+%E D C B A 		5
+%F E D C B A 	6
+%
+%G				7
+%H G			8
+%I H G			9
+%J I H G		10
+%K J I H G		11
+%L K J I H G 	12
 
 captura_aux([], 0, []).
-captura_aux([0|T], 0, [0|T]).
+captura_aux([X|T], 0, [X|T]) :- X @< 2.
 captura_aux([X|T], 0, [X|T]) :- X @> 3.
 captura_aux([X|T1], P, [0|T2]) :-
     between(2, 3, X),
     captura_aux(T1, A, T2),
     P is X + A.
 
+
+inverte([A|T], 1, [An|T], P) :- captura_aux([A], P, [An]).
+inverte([A,B|T], 2, [An,Bn|T], P) :- captura_aux([B,A], P, [Bn,An]).
+inverte([A,B,C|T], 3, [An,Bn,Cn|T], P) :- captura_aux([C,B,A], P, [Cn,Bn,An]).
+inverte([A,B,C,D|T], 4, [An,Bn,Cn,Dn|T], P) :- captura_aux([D,C,B,A], P, [Dn,Cn,Bn,An]).
+inverte([A,B,C,D,E|T], 5, [An,Bn,Cn,Dn,En|T], P) :- captura_aux([E,D,C,B,A], P, [En,Dn,Cn,Bn,An]).
+inverte([A,B,C,D,E,F|T], 6, [An,Bn,Cn,Dn,En,Fn|T], P) :- captura_aux([F,E,D,C,B,A], P, [Fn,En,Dn,Cn,Bn,An]).
+inverte([A,B,C,D,E,F,G|T], 7, [A,B,C,D,E,F,Gn|T], P) :- captura_aux([G], P, [Gn]).
+inverte([A,B,C,D,E,F,G,H|T], 8, [A,B,C,D,E,F,Gn,Hn|T], P) :- captura_aux([H,G], P, [Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I|T], 9, [A,B,C,D,E,F,Gn,Hn,In|T], P) :- captura_aux([I,H,G], P, [In,Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I,J|T], 10, [A,B,C,D,E,F,Gn,Hn,In,Jn|T], P) :- captura_aux([J,I,H,G], P, [Jn,In,Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I,J,K|T], 11, [A,B,C,D,E,F,Gn,Hn,In,Jn,Kn|T], P) :- captura_aux([K,J,I,H,G], P, [Kn,Jn,In,Hn,Gn]).
+inverte([A,B,C,D,E,F,G,H,I,J,K,L], 12, [A,B,C,D,E,F,Gn,Hn,In,Jn,Kn,Ln], P) :- captura_aux([L,K,J,I,H,G], P, [Ln,Kn,Jn,In,Hn,Gn]).
+
+
 captura([P1, P2, Tab], X, U, [P1n, P2, Tabn]) :-
     X @=< 6,
     U @> 6,
-    inverte(Tab, U, A),
-    captura_aux(A, P, B),
-    P1n is P1 + P,
-    inverte(Tabn, U, B),!.
+    inverte(Tab, U, Tabn, P),
+    P1n is P1 + P,!.
 captura([P1, P2, Tab], X, U, [P1, P2n, Tabn]) :-
     X @> 6,
     U @=< 6,
-    inverte(Tab, U, A),
-    captura_aux(A, P, B),
-    P2n is P2 + P,
-    inverte(Tabn, U, B),!.
+    inverte(Tab, U, Tabn, P),
+    P2n is P2 + P,!.
 captura(E, _, _, E).
 
 
@@ -171,7 +171,7 @@ captura(E, _, _, E).
 regra_2_p1([P1, P2, Tab], [P1n, P2n, Tabn]) :-
     tab_2(Tab, TabAdv),                 % Verifica se o lado do adversário ficou
     maximo(TabAdv, 0),!,                % sem jogadas
-    op([P1,P2,Tab],p2,_,[P1n,P2n,Tabn]),% Faz outra jogada (ponto de retorno do bt) 
+    op([P1,P2,Tab],p1,_,[P1n,P2n,Tabn]),% Faz outra jogada (ponto de retorno do bt) 
     tab_2(Tabn, TabnAdv),               % O novo lado do adversário tem que ter
     \+ maximo(TabnAdv, 0).              % jogadas possiveis
 regra_2_p1([P1, P2, Tab], [P1, P2, Tab]) :-
@@ -204,84 +204,84 @@ tab_2([_,_,_,_,_,_|T], T).
 jogada_1(Ei, _, Ei) :-
     terminal(Ei),!.
 %jogada_1 que verifica a regra suplementar 1 se aplica
-jogada_1([P1,P2,Tabi], X, Ef) :-
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
     tab_2(Tabi, L2),
     maximo(L2, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L1),
+    tab_1(Tabi, L1),        % Verifica se a jogada X é válida
     maximo(L1, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
-jogada_1([P1,P2,Tabi], X, Ef) :-
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab_2(Tabn, L2n),
+    \+ maximo(L2n, 0),!.        % A jogada introduz novas pecas no lado do adv
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
     tab_2(Tabi, L2),
-    maximo(L2, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L1),                        % A casa escolhida tem uma semente
+    maximo(L2, 0),              % O adversario nao tem como jogar (Regra supl 1)
+    tab_1(Tabi, L1),            % Verifica se a jogada X é válida
     maximo(L1, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
-
-jogada_1([P1,P2,Tabi], X, Ef) :-            % Existe casas com sementes > 1
-    tab_1(Tabi, L1),                        % A casa escolhida é uma dessas
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab_2(Tabn, L2n),
+    \+ maximo(L2n, 0),!.
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
+    tab_1(Tabi, L1),        % Verifica se a jogada X é válida
     maximo(L1, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
-jogada_1([P1,P2,Tabi], X, Ef) :-            % Não existe casas com sementes > 1
-    tab_1(Tabi, L1),                        % A casa escolhida tem uma semente
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
+    tab_1(Tabi, L1),            % Verifica se a jogada X é válida
     maximo(L1, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
 
-%jogada_1 que verifica a regra suplementar 1 se aplicas
+
 jogada_2(Ei, _, Ei) :-
     terminal(Ei),!.
-jogada_2([P1,P2,Tabi], X, Ef) :-
+%jogada_2 que verifica a regra suplementar 1 se aplica
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
     tab_1(Tabi, L1),
     maximo(L1, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L2),
+    tab_2(Tabi, L2),        % Verifica se a jogada X é válida
     maximo(L2, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
-jogada_2([P1,P2,Tabi], X, Ef) :-
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab_1(Tabn, L1n),
+    \+ maximo(L1n, 0),!.        % A jogada introduz novas pecas no lado do adv
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
     tab_1(Tabi, L1),
-    maximo(L1, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L2),                        % A casa escolhida tem uma semente
+    maximo(L1, 0),              % O adversario nao tem como jogar (Regra supl 1)
+    tab_2(Tabi, L2),            % Verifica se a jogada X é válida
     maximo(L2, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
-% Jogadas para o segundo jogador
-jogada_2([P1,P2,Tabi], X, Ef) :-            
-    tab_2(Tabi, L2),                        
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),
+    tab_1(Tabn, L1n),
+    \+ maximo(L1n, 0),!.
+%jogada_2 que verifica a regra suplementar 1 se aplica
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
+    tab_2(Tabi, L2),        % Verifica se a jogada X é válida
     maximo(L2, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
-jogada_2([P1,P2,Tabi], X, Ef) :-
-    tab_2(Tabi, L2),
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
+    tab_2(Tabi, L2),            % Verifica se a jogada X é válida
     maximo(L2, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -293,52 +293,43 @@ jogada_2([P1,P2,Tabi], X, Ef) :-
 
 % X = 1
 op([P1, P2, Tab], p1, 1, En) :-
-    %write(1),nl,
     jogada_1([P1, P2, Tab], 1, En).
 % X = 2
 op([P1, P2, Tab], p1, 2, En) :-
-    %write(2),nl,
     jogada_1([P1, P2, Tab], 2, En).
 % X = 3
 op([P1, P2, Tab], p1, 3, En) :-
-    %write(3),nl,
     jogada_1([P1, P2, Tab], 3, En).
 % X = 4
 op([P1, P2, Tab], p1, 4, En) :-
-    %write(4),nl,
     jogada_1([P1, P2, Tab], 4, En).
 % X = 5
 op([P1, P2, Tab], p1, 5, En) :-
-    %write(5),nl,
     jogada_1([P1, P2, Tab], 5, En).
 % X = 6
 op([P1, P2, Tab], p1, 6, En) :-
-    %write(6),nl,
     jogada_1([P1, P2, Tab], 6, En).
 % X = 7
 op([P1, P2, Tab], p2, 7, En) :-
-    %write(7),nl,
     jogada_2([P1, P2, Tab], 7, En).
 % X = 8
 op([P1, P2, Tab], p2, 8, En) :-
-    %write(8),nl,
     jogada_2([P1, P2, Tab], 8, En).
 % X = 9
 op([P1, P2, Tab], p2, 9, En) :-
-    %write(9),nl,
     jogada_2([P1, P2, Tab], 9, En).
 % X = 10
 op([P1, P2, Tab], p2, 10, En) :-
-    %write(10),nl,
     jogada_2([P1, P2, Tab], 10, En).
 % X = 11
 op([P1, P2, Tab], p2, 11, En) :-
-    %write(11),nl,
     jogada_2([P1, P2, Tab], 11, En).
 % X = 12
 op([P1, P2, Tab], p2, 12, En) :-
-    %write(12),nl,
     jogada_2([P1, P2, Tab], 12, En).
+
+op([P1, P2, [0,0,0,0,0,0|T]], p1, 0, [P1, P2, [0,0,0,0,0,0|T]]).
+op([P1, P2, [_,_,_,_,_,_,0,0,0,0,0,0]], p2, 0, [P1, P2, [_,_,_,_,_,_,0,0,0,0,0,0]]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
