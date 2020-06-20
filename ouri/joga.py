@@ -70,11 +70,10 @@ def joga(lista, pos):
 
 if __name__ == '__main__':
 
-    tab = [2, 1, 1, 0, 0, 1, 11, 1, 0, 2, 4, 5]
-
+    tab = [18, 0, 1, 0, 0, 0, 0, 2, 1, 1, 0, 1]
     #print(tab)
-    x = 11
-
+    x = 1
+    
     lista , pontos = joga(tab, x)
 
     #print(pontos)

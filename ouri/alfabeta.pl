@@ -4,13 +4,10 @@
 profundidade(7).
 
 
-joga(Op, V, Ef) :-  
-	asserta(visitados(0)),
+joga(Op) :-
 	estado_inicial(Ei),
 	jogador(J),
-	alfabeta(Ei, Op, J),
-	op(Ei, p1, Op, Ef),
-	visitados(V), !.
+	alfabeta(Ei, Op, J),!.
 
 % decide qual é a melhor jogada num estado do jogo
 % alfabeta(Estado, MelhorJogada)

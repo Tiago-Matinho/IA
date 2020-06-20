@@ -5,9 +5,11 @@
 :-dynamic(jogador/1).
 
 
-%estado_inicial([0, 0, [7, 7, 7, 0, 1, 2, 7, 7, 7, 0, 1, 2]]).
-%jogador(p1).
+estado_inicial([15, 13, [1, 2, 5, 4, 0, 0, 0, 2, 2, 1, 1, 2]]).
+jogador(p1).
 
+trace.
+op([0,0,[18, 0, 1, 0, 0, 0, 0, 2, 1, 1, 0, 1]], p1, 1, En), write(En).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -21,7 +23,12 @@ terminal([X,_,_]) :-
 terminal([_, X, _]) :-
     X @> 24.
 terminal([_,_,[0,0,0,0,0,0,0,0,0,0,0,0]]).
-terminal([_,_,[0,0,0,0,0,0,0,0,0,0,0,0]]).
+terminal([_,_,[1,0,0,0,0,0,1,0,0,0,0,0]]).
+terminal([_,_,[0,1,0,0,0,0,0,1,0,0,0,0]]).
+terminal([_,_,[0,0,1,0,0,0,0,0,1,0,0,0]]).
+terminal([_,_,[0,0,0,1,0,0,0,0,0,1,0,0]]).
+terminal([_,_,[0,0,0,0,1,0,0,0,0,0,1,0]]).
+terminal([_,_,[0,0,0,0,0,1,0,0,0,0,0,1]]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -197,93 +204,84 @@ tab_2([_,_,_,_,_,_|T], T).
 jogada_1(Ei, _, Ei) :-
     terminal(Ei),!.
 %jogada_1 que verifica a regra suplementar 1 se aplica
-jogada_1([P1,P2,Tabi], X, Ef) :-
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
     tab_2(Tabi, L2),
     maximo(L2, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L1),
+    tab_1(Tabi, L1),        % Verifica se a jogada X é válida
     maximo(L1, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
     captura(En, X, U, [P1n, P2n, Tabn]),
-    % se o tabuleiro do adv tem algo maior q 0 se nao tive a jogada n é valida completar a regra 1
-    tab2(Tabn, L2n),
-    \+ maximo(L2n, 0),!,
-    regra_2_p1([P1n, P2n, Tabn], Ef),!.
-jogada_1([P1,P2,Tabi], X, Ef) :-
+    tab_2(Tabn, L2n),
+    \+ maximo(L2n, 0),!.        % A jogada introduz novas pecas no lado do adv
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
     tab_2(Tabi, L2),
-    maximo(L2, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L1),                        % A casa escolhida tem uma semente
+    maximo(L2, 0),              % O adversario nao tem como jogar (Regra supl 1)
+    tab_1(Tabi, L1),            % Verifica se a jogada X é válida
     maximo(L1, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
     captura(En, X, U, [P1n, P2n, Tabn]),
-    tab2(Tabn, L2n),
-    \+ maximo(L2n, 0),!,
-    regra_2_p1([P1n, P2n, Tabn], Ef),!.
-
-jogada_1([P1,P2,Tabi], X, Ef) :-            % Existe casas com sementes > 1
-    tab_1(Tabi, L1),                        % A casa escolhida é uma dessas
+    tab_2(Tabn, L2n),
+    \+ maximo(L2n, 0),!.
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
+    tab_1(Tabi, L1),        % Verifica se a jogada X é válida
     maximo(L1, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
-jogada_1([P1,P2,Tabi], X, Ef) :-            % Não existe casas com sementes > 1
-    tab_1(Tabi, L1),                        % A casa escolhida tem uma semente
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
+jogada_1([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
+    tab_1(Tabi, L1),            % Verifica se a jogada X é válida
     maximo(L1, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p1(Enn, Ef),!.
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
 
-%jogada_1 que verifica a regra suplementar 1 se aplicas
+
 jogada_2(Ei, _, Ei) :-
     terminal(Ei),!.
-jogada_2([P1,P2,Tabi], X, Ef) :-
+%jogada_2 que verifica a regra suplementar 1 se aplica
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
     tab_1(Tabi, L1),
     maximo(L1, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_1(Tabi, L2),
+    tab_2(Tabi, L2),        % Verifica se a jogada X é válida
     maximo(L2, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
     captura(En, X, U, [P1n, P2n, Tabn]),
-    tab1(Tabn, L1n),
-    \+ maximo(L1n, 0),!,
-    regra_2_p2([P1n, P2n, Tabn], Ef),!.
-jogada_2([P1,P2,Tabi], X, Ef) :-
+    tab_1(Tabn, L1n),
+    \+ maximo(L1n, 0),!.        % A jogada introduz novas pecas no lado do adv
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
     tab_1(Tabi, L1),
-    maximo(L1, 0),          % O adversario nao tem como jogar (Regra supl 1)
-    tab_2(Tabi, L2),                        % A casa escolhida tem uma semente
+    maximo(L1, 0),              % O adversario nao tem como jogar (Regra supl 1)
+    tab_2(Tabi, L2),            % Verifica se a jogada X é válida
     maximo(L2, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
     captura(En, X, U, [P1n, P2n, Tabn]),
-    tab1(Tabn, L1n),
-    \+ maximo(L1n, 0),!,
-    regra_2_p2([P1n, P2n, Tabn], Ef),!.
-% Jogadas para o segundo jogador
-jogada_2([P1,P2,Tabi], X, Ef) :-            
-    tab_2(Tabi, L2),                        
+    tab_1(Tabn, L1n),
+    \+ maximo(L1n, 0),!.
+%jogada_2 que verifica a regra suplementar 1 se aplica
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :-
+    tab_2(Tabi, L2),        % Verifica se a jogada X é válida
     maximo(L2, M),
     M @> 1,
     nth1(X, Tabi, Val),
     Val @> 1,!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
-jogada_2([P1,P2,Tabi], X, Ef) :-
-    tab_2(Tabi, L2),
+    distribui([P1,P2,Tabi], X, En, U),  % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
+jogada_2([P1,P2,Tabi], X, [P1n, P2n, Tabn]) :- % Repete-se o mesmo que na anterior mas para o caso de o valor maximo do nosso lado = 1
+    tab_2(Tabi, L2),            % Verifica se a jogada X é válida
     maximo(L2, 1),
     nth1(X, Tabi, 1),!,
-    distribui([P1,P2,Tabi], X, En, U),
-    captura(En, X, U, Enn),
-    regra_2_p2(Enn, Ef),!.
+    distribui([P1,P2,Tabi], X, En, U), % Executa jogada X
+    captura(En, X, U, [P1n, P2n, Tabn]),!.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -329,6 +327,9 @@ op([P1, P2, Tab], p2, 11, En) :-
 % X = 12
 op([P1, P2, Tab], p2, 12, En) :-
     jogada_2([P1, P2, Tab], 12, En).
+
+op([P1, P2, [0,0,0,0,0,0|T]], p1, 0, [P1, P2, [0,0,0,0,0,0|T]]).
+op([P1, P2, [_,_,_,_,_,_,0,0,0,0,0,0]], p2, 0, [P1, P2, [_,_,_,_,_,_,0,0,0,0,0,0]]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

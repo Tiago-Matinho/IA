@@ -26,13 +26,10 @@ def jogada_bot(tabuleiro, lado):
 
     prolog.asserta("estado_inicial([%d, %d, %s])" %(tabuleiro[0], tabuleiro[1], tabuleiro_str))
 
-    query = list(prolog.query("joga(X,V,E)"))[0]
+    query = list(prolog.query("joga(X)"))[0]
     escolhaBot = query['X']
-    visitados = query['V']
-    estado_prolog = query['E']
 
-    print("Bot escolheu: %d depois de visitar %d nós" %(escolhaBot, visitados))
-    print("Estado prolog: " + str(estado_prolog))
+    print("Bot escolheu: %d" %(escolhaBot))
 
     tabuleiro_n, pontos = joga(tabuleiro[2:], escolhaBot)
 
