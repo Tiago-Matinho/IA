@@ -1,0 +1,52 @@
+6
+demorou: 4.277
+4
+demorou: 2.054
+1
+demorou: 1.457
+6
+demorou: 1.499
+2
+demorou: 0.714
+3
+demorou: 1.222
+4
+demorou: 1.823
+6
+demorou: 1.173
+3
+demorou: 0.648
+5
+demorou: 0.551
+2
+demorou: 0.531
+5
+demorou: 1.458
+1
+demorou: 0.422
+3
+demorou: 0.442
+2
+demorou: 0.132
+3
+demorou: 0.096
+6
+demorou: 0.062
+5
+demorou: 0.267
+4
+demorou: 0.008
+6
+demorou: 0.006
+3
+demorou: 0.003
+5
+demorou: 0.003
+4
+demorou: 0.006
+6
+demorou: 0.012
+2
+demorou: 0.001
+4
+demorou: 0.001

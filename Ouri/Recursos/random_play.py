@@ -4,6 +4,7 @@ from pyswip import Prolog
 from joga import joga
 from tab import draw
 import time
+import random
 
 
 def jogada_bot(tabuleiro, lado):
@@ -16,19 +17,23 @@ def jogada_bot(tabuleiro, lado):
             print(0)
             return tabuleiro
 
-    prolog.retractall("estado_inicial(_)")
+    if(lado):
+        escolhaBot = random.randint(1,6)
+    else:
+        escolhaBot = random.randint(7,12)
 
-    prolog.asserta("estado_inicial([%d, %d, %s])" %(tabuleiro[0], tabuleiro[1], str(tabuleiro[2:])))
+    while(True):
+        if max(tabuleiro[2:]) == 1:
+            if tabuleiro[escolhaBot + 1] == 1:
+                break
+        else:
+            if tabuleiro[escolhaBot + 1] > 1:
+                break
 
-    start_time = int(time.time() * 1000) #tempo
-
-    #query ao prolog
-    query = list(prolog.query("joga(X)"))[0]
-    escolhaBot = query['X']
-
-    print(escolhaBot)
-    if(escolhaBot == 0):
-        return tabuleiro
+        if(lado):
+            escolhaBot = random.randint(1,6)
+        else:
+            escolhaBot = random.randint(7,12)
 
     #faz jogada do bot
     tabuleiro_n, pontos = joga(tabuleiro[2:], escolhaBot)
@@ -38,16 +43,15 @@ def jogada_bot(tabuleiro, lado):
         pontos += tabuleiro[0]
         tabuleiro_n.insert(0, tabuleiro[1])
         tabuleiro_n.insert(0, pontos)
+        print(escolhaBot)
 
     else:       #2º jogador
         pontos += tabuleiro[1]
         tabuleiro_n.insert(0, pontos)
         tabuleiro_n.insert(0, tabuleiro[0])
+        print(escolhaBot - 6)
 
-    #tempo passado
-    time_diff = int(time.time() * 1000) - start_time
-    print("demorou: " + str(time_diff / 1000))
-
+    draw(tabuleiro_n, escolhaBot)
     return tabuleiro_n
 
 def jogada_adv(tabuleiro, lado):
@@ -72,14 +76,14 @@ def jogada_adv(tabuleiro, lado):
         tabuleiro_n.insert(0, pontos)
         tabuleiro_n.insert(0, tabuleiro[0])
 
+
+    draw(tabuleiro, escolha)
     return tabuleiro_n
 
 def vencedor(tabuleiro):
     if(tabuleiro[0] > 24):
-        print("Jogador 1 venceu!")
         return True
     elif(tabuleiro[1] > 24):
-        print("Jogador 2 venceu!")
         return True
     return False
 
@@ -90,21 +94,6 @@ if __name__ == '__main__':
 
     lado = (sys.argv[1] == "p")
 
-    if lado:
-        prolog.asserta("jogador(p1)")
-        prolog.consult("1.pl")  #regras para o jogador 1
-
-    else:
-        prolog.asserta("jogador(p2)")
-        prolog.consult("2.pl")
-
-    if(sys.argv[2] == "1"):
-        prolog.asserta("profundidade(7)")
-    elif(sys.argv[2] == "2"):
-        prolog.asserta("profundidade(8)")
-    elif(sys.argv[2] == "3"):
-        prolog.asserta("profundidade(9)")
-    
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
 
     while True:
@@ -113,11 +102,13 @@ if __name__ == '__main__':
 
         if(lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
-            draw(tabuleiro)
 
         tabuleiro = jogada_adv(tabuleiro, lado)
-        draw(tabuleiro)
 
         if(not lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
-            draw(tabuleiro)
+
+    if(tabuleiro[0] > 24 and lado):
+        print("Venci")
+    if(tabuleiro[1] > 24 and not lado):
+        print("Venci")
