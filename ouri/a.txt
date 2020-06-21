@@ -1,156 +1,69 @@
-2
-demorou: 16.928
-1
-demorou: 7.404
 6
-demorou: 6.159
-4
-demorou: 3.613
-5
-demorou: 3.779
+demorou: 69.498
 3
-demorou: 3.312
-6
-demorou: 4.825
-4
-demorou: 2.656
+demorou: 26.61
 1
-demorou: 2.063
-6
-demorou: 1.918
+demorou: 21.493
 2
-demorou: 0.893
-4
-demorou: 1.43
-6
-demorou: 1.005
-2
-demorou: 0.484
+demorou: 17.977
 3
-demorou: 0.638
-1
-demorou: 0.439
-2
-demorou: 0.304
-4
-demorou: 0.177
-5
-demorou: 0.157
-2
-demorou: 0.094
+demorou: 9.63
 6
-demorou: 0.018
+demorou: 17.132
+1
+demorou: 13.417
 4
-demorou: 0.005
+demorou: 10.215
+1
+demorou: 21.089
+6
+demorou: 16.248
+5
+demorou: 11.311
+1
+demorou: 23.076
 3
-demorou: 0.005
-6
-demorou: 0.006
-5
-demorou: 0.005
-6
-demorou: 0.015
+demorou: 12.252
 4
-demorou: 0.005
-5
-demorou: 0.002
-6
-demorou: 0.002
+demorou: 18.772
 1
-demorou: 0.002
-2
-demorou: 0.002
+demorou: 23.516
 3
-demorou: 0.002
-4
-demorou: 0.003
-5
-demorou: 0.002
-6
-demorou: 0.003
+demorou: 8.697
 1
-demorou: 0.002
-2
-demorou: 0.002
+demorou: 11.97
+5
+demorou: 9.179
 3
-demorou: 0.002
+demorou: 9.629
 4
-demorou: 0.003
-5
-demorou: 0.002
+demorou: 5.512
 6
-demorou: 0.003
-1
-demorou: 0.002
+demorou: 3.089
+5
+demorou: 2.023
 2
-demorou: 0.002
-3
-demorou: 0.002
-4
-demorou: 0.004
+demorou: 0.902
 5
-demorou: 0.003
-6
-demorou: 0.003
+demorou: 2.029
 1
-demorou: 0.002
+demorou: 1.633
+4
+demorou: 0.355
+6
+demorou: 0.261
+1
+demorou: 0.134
 2
-demorou: 0.002
-3
-demorou: 0.003
-4
-demorou: 0.002
+demorou: 0.155
 5
-demorou: 0.003
-6
-demorou: 0.004
-1
-demorou: 0.002
-2
-demorou: 0.003
+demorou: 0.053
 3
-demorou: 0.002
+demorou: 0.149
 4
-demorou: 0.003
+demorou: 0.0
 5
-demorou: 0.003
+demorou: 0.0
 6
-demorou: 0.003
-1
-demorou: 0.002
-2
-demorou: 0.002
-3
-demorou: 0.002
-4
-demorou: 0.002
-5
-demorou: 0.003
-6
-demorou: 0.003
-1
-demorou: 0.002
-2
-demorou: 0.002
-3
-demorou: 0.002
-4
-demorou: 0.002
-5
-demorou: 0.003
-6
-demorou: 0.003
-1
-demorou: 0.002
-2
-demorou: 0.002
-3
-demorou: 0.002
-4
-demorou: 0.003
-5
-demorou: 0.003
-6
-demorou: 0.004
-1
-demorou: 0.002
+demorou: 0.0
+Venci
