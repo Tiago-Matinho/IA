@@ -1,0 +1,47 @@
+6
+demorou: 4.452
+3
+demorou: 1.814
+1
+demorou: 1.093
+2
+demorou: 0.732
+1
+demorou: 1.499
+3
+demorou: 1.516
+5
+demorou: 1.398
+3
+demorou: 1.58
+4
+demorou: 0.846
+5
+demorou: 1.239
+3
+demorou: 1.373
+1
+demorou: 1.104
+5
+demorou: 0.787
+4
+demorou: 0.496
+1
+demorou: 0.4
+3
+demorou: 0.683
+5
+demorou: 0.385
+2
+demorou: 0.049
+6
+demorou: 0.093
+1
+demorou: 0.054
+3
+demorou: 0.039
+4
+demorou: 0.032
+5
+demorou: 0.034
+Venci

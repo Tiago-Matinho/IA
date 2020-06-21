@@ -5,7 +5,7 @@ def draw(Tab):
 	boardIm = Image.open('ouri.png')
 	draw = ImageDraw.Draw(boardIm)
 
-	pos = [(55, 85), (750, 85),
+	pos = [(750, 85), (55, 85),
 	(154, 130),
 	(254, 130),
 	(354, 130),

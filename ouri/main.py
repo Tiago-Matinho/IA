@@ -26,8 +26,8 @@ def jogada_bot(tabuleiro, lado):
     query = list(prolog.query("joga(X)"))[0]
     escolhaBot = query['X']
 
-    print(escolhaBot)
     if(escolhaBot == 0):
+        print(escolhaBot)
         return tabuleiro
 
     #faz jogada do bot
@@ -38,11 +38,13 @@ def jogada_bot(tabuleiro, lado):
         pontos += tabuleiro[0]
         tabuleiro_n.insert(0, tabuleiro[1])
         tabuleiro_n.insert(0, pontos)
+        print(escolhaBot)
 
     else:       #2º jogador
         pontos += tabuleiro[1]
         tabuleiro_n.insert(0, pontos)
         tabuleiro_n.insert(0, tabuleiro[0])
+        print(escolhaBot - 6)
 
     #tempo passado
     time_diff = int(time.time() * 1000) - start_time
@@ -76,10 +78,10 @@ def jogada_adv(tabuleiro, lado):
 
 def vencedor(tabuleiro):
     if(tabuleiro[0] > 24):
-        print("Jogador 1 venceu!")
+        #print("Jogador 1 venceu!")
         return True
     elif(tabuleiro[1] > 24):
-        print("Jogador 2 venceu!")
+        #print("Jogador 2 venceu!")
         return True
     return False
 
@@ -121,3 +123,8 @@ if __name__ == '__main__':
         if(not lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
             draw(tabuleiro)
+
+    if(tabuleiro[0] > 24 and lado):
+        print("Venci")
+    if(tabuleiro[1] > 24 and not lado):
+        print("Venci")
