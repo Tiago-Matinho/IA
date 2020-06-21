@@ -17,7 +17,11 @@ def jogada_bot(tabuleiro, lado):
             print(0)
             return tabuleiro
 
-    escolhaBot = random.randint(1,6)
+    if(lado):
+        escolhaBot = random.randint(1,6)
+    else:
+        escolhaBot = random.randint(7,12)
+
     while(True):
         if max(tabuleiro[2:]) == 1:
             if tabuleiro[escolhaBot + 1] == 1:
@@ -25,6 +29,11 @@ def jogada_bot(tabuleiro, lado):
         else:
             if tabuleiro[escolhaBot + 1] > 1:
                 break
+
+        if(lado):
+            escolhaBot = random.randint(1,6)
+        else:
+            escolhaBot = random.randint(7,12)
 
     #faz jogada do bot
     tabuleiro_n, pontos = joga(tabuleiro[2:], escolhaBot)
