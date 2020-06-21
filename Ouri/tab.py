@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 
-def draw(Tab, escolha):
+def draw_board(Tab, escolha):
 	boardIm = Image.open('ouri.png')
 	draw = ImageDraw.Draw(boardIm)
 
