@@ -1,47 +1,156 @@
-6
-demorou: 4.452
-3
-demorou: 1.814
-1
-demorou: 1.093
 2
-demorou: 0.732
+demorou: 16.928
 1
-demorou: 1.499
-3
-demorou: 1.516
-5
-demorou: 1.398
-3
-demorou: 1.58
-4
-demorou: 0.846
-5
-demorou: 1.239
-3
-demorou: 1.373
-1
-demorou: 1.104
-5
-demorou: 0.787
-4
-demorou: 0.496
-1
-demorou: 0.4
-3
-demorou: 0.683
-5
-demorou: 0.385
-2
-demorou: 0.049
+demorou: 7.404
 6
-demorou: 0.093
-1
-demorou: 0.054
-3
-demorou: 0.039
+demorou: 6.159
 4
-demorou: 0.032
+demorou: 3.613
 5
-demorou: 0.034
-Venci
+demorou: 3.779
+3
+demorou: 3.312
+6
+demorou: 4.825
+4
+demorou: 2.656
+1
+demorou: 2.063
+6
+demorou: 1.918
+2
+demorou: 0.893
+4
+demorou: 1.43
+6
+demorou: 1.005
+2
+demorou: 0.484
+3
+demorou: 0.638
+1
+demorou: 0.439
+2
+demorou: 0.304
+4
+demorou: 0.177
+5
+demorou: 0.157
+2
+demorou: 0.094
+6
+demorou: 0.018
+4
+demorou: 0.005
+3
+demorou: 0.005
+6
+demorou: 0.006
+5
+demorou: 0.005
+6
+demorou: 0.015
+4
+demorou: 0.005
+5
+demorou: 0.002
+6
+demorou: 0.002
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.003
+5
+demorou: 0.002
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.003
+5
+demorou: 0.002
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.004
+5
+demorou: 0.003
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.003
+4
+demorou: 0.002
+5
+demorou: 0.003
+6
+demorou: 0.004
+1
+demorou: 0.002
+2
+demorou: 0.003
+3
+demorou: 0.002
+4
+demorou: 0.003
+5
+demorou: 0.003
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.002
+5
+demorou: 0.003
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.002
+5
+demorou: 0.003
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.003
+5
+demorou: 0.003
+6
+demorou: 0.004
+1
+demorou: 0.002

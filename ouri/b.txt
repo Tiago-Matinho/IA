@@ -1,46 +1,154 @@
 5
-demorou: 11.346
-3
-demorou: 5.649
-6
-demorou: 5.138
-4
-demorou: 3.812
+demorou: 2.985
 1
-demorou: 4.244
+demorou: 1.757
 2
-demorou: 3.456
+demorou: 1.685
+5
+demorou: 1.196
+3
+demorou: 1.264
+6
+demorou: 1.18
 1
-demorou: 5.523
+demorou: 0.92
+3
+demorou: 0.684
+6
+demorou: 0.708
+5
+demorou: 0.502
 4
-demorou: 4.008
+demorou: 0.172
 2
-demorou: 4.948
+demorou: 0.214
+6
+demorou: 0.059
 5
-demorou: 4.661
-3
-demorou: 4.018
+demorou: 0.065
+2
+demorou: 0.094
 1
-demorou: 2.149
-5
-demorou: 1.933
-4
-demorou: 1.224
-6
-demorou: 0.702
+demorou: 0.094
 3
-demorou: 0.39
-4
-demorou: 0.078
+demorou: 0.031
 6
-demorou: 0.124
-4
-demorou: 0.098
-6
-demorou: 0.073
+demorou: 0.036
 5
-demorou: 0.034
-1
-demorou: 0.033
+demorou: 0.096
 6
-demorou: 0.0
+demorou: 0.031
+4
+demorou: 0.003
+6
+demorou: 0.002
+5
+demorou: 0.005
+1
+demorou: 0.002
+2
+demorou: 0.005
+3
+demorou: 0.003
+4
+demorou: 0.002
+6
+demorou: 0.001
+5
+demorou: 0.001
+6
+demorou: 0.002
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.002
+5
+demorou: 0.002
+6
+demorou: 0.002
+1
+demorou: 0.001
+2
+demorou: 0.001
+3
+demorou: 0.002
+4
+demorou: 0.002
+5
+demorou: 0.003
+6
+demorou: 0.002
+1
+demorou: 0.001
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.002
+5
+demorou: 0.003
+6
+demorou: 0.002
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.001
+4
+demorou: 0.001
+5
+demorou: 0.002
+6
+demorou: 0.003
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.001
+4
+demorou: 0.001
+5
+demorou: 0.002
+6
+demorou: 0.003
+1
+demorou: 0.001
+2
+demorou: 0.001
+3
+demorou: 0.001
+4
+demorou: 0.001
+5
+demorou: 0.002
+6
+demorou: 0.003
+1
+demorou: 0.001
+2
+demorou: 0.001
+3
+demorou: 0.001
+4
+demorou: 0.002
+5
+demorou: 0.002
+6
+demorou: 0.002
+1
+demorou: 0.002
+2
+demorou: 0.002
+3
+demorou: 0.002
+4
+demorou: 0.001
+5
+demorou: 0.002

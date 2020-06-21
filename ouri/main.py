@@ -50,6 +50,7 @@ def jogada_bot(tabuleiro, lado):
     time_diff = int(time.time() * 1000) - start_time
     print("demorou: " + str(time_diff / 1000))
 
+    draw(tabuleiro_n, escolhaBot)
     return tabuleiro_n
 
 def jogada_adv(tabuleiro, lado):
@@ -74,6 +75,8 @@ def jogada_adv(tabuleiro, lado):
         tabuleiro_n.insert(0, pontos)
         tabuleiro_n.insert(0, tabuleiro[0])
 
+
+    draw(tabuleiro, escolha)
     return tabuleiro_n
 
 def vencedor(tabuleiro):
@@ -115,14 +118,11 @@ if __name__ == '__main__':
 
         if(lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
-            draw(tabuleiro)
 
         tabuleiro = jogada_adv(tabuleiro, lado)
-        draw(tabuleiro)
 
         if(not lado):
             tabuleiro = jogada_bot(tabuleiro, lado)
-            draw(tabuleiro)
 
     if(tabuleiro[0] > 24 and lado):
         print("Venci")
