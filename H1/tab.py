@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 
-def draw_board(Tab, escolha, cont):
+def draw_board(Tab, escolha):
 	boardIm = Image.open('ouri.png')
 	draw = ImageDraw.Draw(boardIm)
 
@@ -31,5 +31,5 @@ def draw_board(Tab, escolha, cont):
 		else:
 			draw.text(cord, text, fill="black", font=font, align="center")
 
-	boardIm.save(str(cont) + 'Jogada.png')
+	boardIm.save('Jogada.png')
 	boardIm.close()

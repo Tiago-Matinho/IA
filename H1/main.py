@@ -1,11 +1,12 @@
 import sys
+import subprocess
 import time
 from pyswip import Prolog
 from joga import faz_jogada
 from tab import draw_board
 
 
-def jogada_ia(tabuleiro, primeiro, cont):
+def jogada_ia(tabuleiro, primeiro):
     if(primeiro):
         if(max(tabuleiro[:6]) == 0):
             print(0)
@@ -19,15 +20,12 @@ def jogada_ia(tabuleiro, primeiro, cont):
     prolog.retractall("estado_inicial(_)")
     prolog.asserta("estado_inicial([%d, %d, %s])" %(tabuleiro[0], tabuleiro[1], str(tabuleiro[2:])))
 
-    # inicio da contagem do tempo
+    # inicio dagem do tempo
     start_time = int(time.time() * 1000)
 
     #query ao prolog
     query = list(prolog.query("joga(X)"))[0]
     escolhaBot = query['X']
-
-    #teste = list(prolog.query("op([%d, %d, %s], p2, %d, Ef)" %(tabuleiro[0], tabuleiro[1], str(tabuleiro[2:]), escolhaBot)))[0]
-    #print(teste['Ef'])
 
     if(escolhaBot == 0):
         print(escolhaBot)
@@ -57,10 +55,10 @@ def jogada_ia(tabuleiro, primeiro, cont):
 
     print(tabuleiro_n[2:])
 
-    draw_board(tabuleiro_n, escolhaBot, cont)
+    draw_board(tabuleiro_n, escolhaBot)
     return tabuleiro_n
 
-def jogada_adv(tabuleiro, primeiro, cont):
+def jogada_adv(tabuleiro, primeiro):
     escolha = int(input())  # recebe jogada
 
     if(escolha == 0):       #nao altera
@@ -83,12 +81,18 @@ def jogada_adv(tabuleiro, primeiro, cont):
         tabuleiro_n.insert(0, tabuleiro[0])
 
 
-    draw_board(tabuleiro_n, escolha, cont)
+    draw_board(tabuleiro_n, escolha)
     return tabuleiro_n
 
-def vencedor(tabuleiro):
+def fim_jogo(tabuleiro):
     if(tabuleiro[0] > 24 or tabuleiro[1] > 24):
         return True
+
+    #verifica se existe um loop
+    if(max(tabuleiro) == 2):
+        for i in range(6):
+            if tabuleiro[i] == tabuleiro[i+6] == 1:
+                return True
 
     #verifica se alguem ficou sem jogadas possiveis
     tab1 = tabuleiro[2:8]
@@ -154,25 +158,31 @@ if __name__ == '__main__':
         prolog.asserta("profundidade(%d)" %(9 + profundidade))
     
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
-
-    cont = 0
+    draw_board(tabuleiro, 16)
+    img_proc = subprocess.Popen(["display", "Jogada.png"])
 
     while True:
         if(primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro, cont)
-            cont+=1
-            if(vencedor(tabuleiro)):
+            tabuleiro = jogada_ia(tabuleiro, primeiro)
+            img_proc.kill()
+            img_proc = subprocess.Popen(["display", "Jogada.png"])
+
+            if(fim_jogo(tabuleiro)):
                 break
 
-        tabuleiro = jogada_adv(tabuleiro, primeiro, cont)
-        cont+=1
-        if(vencedor(tabuleiro)):
+        tabuleiro = jogada_adv(tabuleiro, primeiro)
+        img_proc.kill()
+        img_proc = subprocess.Popen(["display", "Jogada.png"])
+
+        if(fim_jogo(tabuleiro)):
             break
 
         if(not primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro, cont)
-            cont+=1
-            if(vencedor(tabuleiro)):
+            tabuleiro = jogada_ia(tabuleiro, primeiro)
+            img_proc.kill()
+            img_proc = subprocess.Popen(["display", "Jogada.png"])
+    
+            if(fim_jogo(tabuleiro)):
                 break
 
 
@@ -181,7 +191,11 @@ if __name__ == '__main__':
             tabuleiro[0] += tabuleiro[2 + i]
             tabuleiro[1] += tabuleiro[8 + i]
 
-    if(tabuleiro[0] > 24 and primeiro):
+    if(tabuleiro[0] > tabuleiro[1] and primeiro):
         print("ganhei!")
-    elif(tabuleiro[1] > 24 and not primeiro):
+    elif(tabuleiro[1] > tabuleiro[0] and not primeiro):
         print("ganhei!")
+    else:
+        print("perdi!")
+
+    img_proc.kill()
