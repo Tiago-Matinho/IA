@@ -121,7 +121,7 @@ def fim_jogo(tabuleiro):
             for i in range(len(tab2)):
                 if(tab2[i] > 1):
                     possivel_tab, p = faz_jogada(tabuleiro, i+1)
-                    if(max(possivel_tab[:6]) != 0):
+                    if(max(possivel_tab[:6]) == 0):
                         return True
         else:
             if(tab2[5] == 1):
@@ -132,7 +132,7 @@ def fim_jogo(tabuleiro):
             for i in range(len(tab1)):
                 if(tab1[i] > 1):
                     possivel_tab, p = faz_jogada(tabuleiro, i+1)
-                    if(max(possivel_tab[6:]) != 0):
+                    if(max(possivel_tab[6:]) == 0):
                         return True
         else:
             if(tab1[5] == 1):
