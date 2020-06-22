@@ -208,7 +208,8 @@ if __name__ == '__main__':
 
     
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
-    
+    img_sp = None
+
     if(GUI):
         draw_board(tabuleiro, 16)
         img_sp = subprocess.Popen(["display", "Jogada.png"])
