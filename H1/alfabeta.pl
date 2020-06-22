@@ -7,7 +7,6 @@ joga(Op) :-
 	estado_inicial(Ei),
 	jogador(J),
 	alfabeta(Ei, Op, J),!.
-joga(-1).
 
 % decide qual é a melhor jogada num estado do jogo
 % alfabeta(Estado, MelhorJogada)
