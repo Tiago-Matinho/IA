@@ -7,13 +7,14 @@ from tab import draw_board
 import tkinter as tk
 from tkinter import simpledialog
 
-def gui_input():
+def gui_input(img_sp):
     window = tk.Tk()
     window.withdraw()
     escolha = simpledialog.askinteger(title="Escolha",
                                     prompt="Que casa escolhe?")
 
     if escolha == None:
+        img_sp.kill()
         exit(1)
     return escolha
 
@@ -22,7 +23,7 @@ def gui_display(img_sp):
     new_img_sp = subprocess.Popen(["display", "Jogada.png"])
     return new_img_sp
 
-def jogada_ia(tabuleiro, primeiro, GUI):
+def jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME):
     if(primeiro):
         if(max(tabuleiro[:6]) == 0):
             print(0)
@@ -65,16 +66,17 @@ def jogada_ia(tabuleiro, primeiro, GUI):
 
     #tempo passado
     time_diff = int(time.time() * 1000) - start_time
-    print("demorou: " + str(time_diff / 1000))
+    if(DISPLAY_TIME):
+        print("demorou: " + str(time_diff / 1000))
 
     if(GUI):
         draw_board(tabuleiro_n, escolhaBot)
     return tabuleiro_n
 
-def jogada_adv(tabuleiro, primeiro,GUI):
+def jogada_adv(tabuleiro, primeiro, img_sp, GUI):
     
     if(GUI):
-        escolha = gui_input()
+        escolha = gui_input(img_sp)
     else:
         escolha = int(input())  # recebe jogada
 
@@ -140,60 +142,65 @@ def fim_jogo(tabuleiro):
 
 
 if __name__ == '__main__':
+    # argumento 1 (algoritmo)
+    if(sys.argv[1] != "minimax" and sys.argv[1] != "alfabeta"):
+        print("Argumentos errados: -minimax / -alfabeta")
+        exit(1)
+
     # inicializa a ligacao ao prolog
     prolog = Prolog()
     prolog.consult("base.pl")
-    prolog.consult(sys.argv[5] + ".pl")
+    prolog.consult(sys.argv[1] + ".pl")
     profundidade = 0
 
-    if(sys.argv[5] == "minimax"):
+    if(sys.argv[1] == "minimax"):
         profundidade = 1
 
-    # argumento 1 (primeiro ou segundo)
-    if(sys.argv[1] != "p" and sys.argv[1] != "-p" and
-        sys.argv[1] != "s" and sys.argv[1] != "-s"):
+    # argumento 2 (primeiro ou segundo)
+    if(sys.argv[2] != "p" and sys.argv[2] != "-p" and
+        sys.argv[2] != "s" and sys.argv[2] != "-s"):
         print("Argumentos errados: -p / -s")
         exit(1)
 
-    primeiro = (sys.argv[1] == "p" or sys.argv[1] == "-p")
+    primeiro = (sys.argv[2] == "p" or sys.argv[2] == "-p")
 
     if primeiro:
         prolog.asserta("jogador(p1)")
         prolog.consult("1.pl")  #regras para o jogador 1
     else:
         prolog.asserta("jogador(p2)")
-        prolog.consult("2.pl")
+        prolog.consult("2.pl")  #regras para o jogador 2
 
-    # argumento 2 (nivel)
-    if(sys.argv[2] != "1" and sys.argv[2] != "2" and
-        sys.argv[2] != "3"):
+    # argumento 3 (nivel)
+    if(sys.argv[3] != "1" and sys.argv[3] != "2" and
+        sys.argv[3] != "3"):
         print("Argumentos errados: 1 / 2 / 3")
         exit(1)
-    if(sys.argv[2] == "1"):
+    if(sys.argv[3] == "1"):
         prolog.asserta("profundidade(%d)" %(7 + profundidade))
-    elif(sys.argv[2] == "2"):
+    elif(sys.argv[3] == "2"):
         prolog.asserta("profundidade(%d)" %(8 + profundidade))
-    elif(sys.argv[2] == "3"):
+    elif(sys.argv[3] == "3"):
         prolog.asserta("profundidade(%d)" %(9 + profundidade))
     
-    # argumento 3 (TEMPO)
+    # argumento 4 (TEMPO)
     DISPLAY_TIME = False
-    if(len(sys.argv) >= 4):
-        if(sys.argv[3] == "true"):
+    if(len(sys.argv) > 4):
+        if(sys.argv[4] == "true"):
             DISPLAY_TIME = True
-        elif(sys.argv[3] == "false"):
+        elif(sys.argv[4] == "false"):
             DISPLAY_TIME = False
         else:
             print("Argumentos errados: true / false")
             exit(1)
 
 
-    # argumento 4 (GUI)
+    # argumento 5 (GUI)
     GUI = False
-    if(len(sys.argv) >= 5):
-        if(sys.argv[4] == "gui"):
+    if(len(sys.argv) == 6):
+        if(sys.argv[5] == "gui"):
             GUI = True
-        elif(sys.argv[4] == "no-gui"):
+        elif(sys.argv[5] == "no-gui"):
             GUI = False
         else:
             print("Argumentos errados: gui / no-gui")
@@ -209,14 +216,14 @@ if __name__ == '__main__':
     # ciclo principal
     while True:
         if(primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI)
+            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME)
             if(GUI):
                 img_sp = gui_display(img_sp)
 
             if(fim_jogo(tabuleiro)):
                 break
 
-        tabuleiro = jogada_adv(tabuleiro, primeiro, GUI)
+        tabuleiro = jogada_adv(tabuleiro, primeiro, img_sp, GUI)
         if(GUI):
             img_sp = gui_display(img_sp)
 
@@ -224,7 +231,7 @@ if __name__ == '__main__':
             break
 
         if(not primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI)
+            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME)
             if(GUI):
                 img_sp = gui_display(img_sp)
     
@@ -244,4 +251,5 @@ if __name__ == '__main__':
     else:
         print("perdi!")
 
-    img_sp.kill()
+    if(GUI):
+        img_sp.kill()
