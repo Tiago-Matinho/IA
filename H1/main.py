@@ -5,7 +5,7 @@ from joga import faz_jogada
 from tab import draw_board
 
 
-def jogada_ia(tabuleiro, primeiro):
+def jogada_ia(tabuleiro, primeiro, cont):
     if(primeiro):
         if(max(tabuleiro[:6]) == 0):
             print(0)
@@ -26,9 +26,14 @@ def jogada_ia(tabuleiro, primeiro):
     query = list(prolog.query("joga(X)"))[0]
     escolhaBot = query['X']
 
+    #teste = list(prolog.query("op([%d, %d, %s], p2, %d, Ef)" %(tabuleiro[0], tabuleiro[1], str(tabuleiro[2:]), escolhaBot)))[0]
+    #print(teste['Ef'])
+
     if(escolhaBot == 0):
         print(escolhaBot)
         return tabuleiro
+
+    #//TODO escolha == -1
 
     #faz jogada
     tabuleiro_n, pontos = faz_jogada(tabuleiro[2:], escolhaBot)
@@ -50,10 +55,12 @@ def jogada_ia(tabuleiro, primeiro):
     time_diff = int(time.time() * 1000) - start_time
     print("demorou: " + str(time_diff / 1000))
 
-    draw_board(tabuleiro_n, escolhaBot)
+    print(tabuleiro_n[2:])
+
+    draw_board(tabuleiro_n, escolhaBot, cont)
     return tabuleiro_n
 
-def jogada_adv(tabuleiro, primeiro):
+def jogada_adv(tabuleiro, primeiro, cont):
     escolha = int(input())  # recebe jogada
 
     if(escolha == 0):       #nao altera
@@ -76,16 +83,45 @@ def jogada_adv(tabuleiro, primeiro):
         tabuleiro_n.insert(0, tabuleiro[0])
 
 
-    draw_board(tabuleiro, escolha)
+    draw_board(tabuleiro_n, escolha, cont)
     return tabuleiro_n
 
 def vencedor(tabuleiro):
-    return (tabuleiro[0] > 24 or tabuleiro[1] > 24)
+    if(tabuleiro[0] > 24 or tabuleiro[1] > 24):
+        return True
+
+    #verifica se alguem ficou sem jogadas possiveis
+    tab1 = tabuleiro[2:8]
+    tab2 = tabuleiro[8:]
+    if(max(tab1) == 0):
+        if(max(tab2) > 1):
+            for i in range(len(tab2)):
+                if(tab2[i] > 1):
+                    possivel_tab, p = faz_jogada(tabuleiro, i+1)
+                    if(max(possivel_tab[:6]) != 0):
+                        return True
+        else:
+            if(tab2[5] == 1):
+                return True
+
+    if(max(tab2) == 0):
+        if(max(tab1) > 1):
+            for i in range(len(tab1)):
+                if(tab1[i] > 1):
+                    possivel_tab, p = faz_jogada(tabuleiro, i+1)
+                    if(max(possivel_tab[6:]) != 0):
+                        return True
+        else:
+            if(tab1[5] == 1):
+                return True
+
+    return False
+
 
 if __name__ == '__main__':
     prolog = Prolog()
     prolog.consult("base.pl")
-    prolog.consult("alfabeta.pl")
+    prolog.consult(sys.argv[3])
 
     if(sys.argv[1] != "p" and sys.argv[1] != "-p" and
         sys.argv[1] != "s" and sys.argv[1] != "-s"):
@@ -116,19 +152,33 @@ if __name__ == '__main__':
     
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
 
+    cont = 0
+
     while True:
+        if(primeiro):
+            tabuleiro = jogada_ia(tabuleiro, primeiro, cont)
+            cont+=1
+            if(vencedor(tabuleiro)):
+                break
+
+        tabuleiro = jogada_adv(tabuleiro, primeiro, cont)
+        cont+=1
         if(vencedor(tabuleiro)):
             break
 
-        if(primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro)
-
-        tabuleiro = jogada_adv(tabuleiro, primeiro)
-
         if(not primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro)
+            tabuleiro = jogada_ia(tabuleiro, primeiro, cont)
+            cont+=1
+            if(vencedor(tabuleiro)):
+                break
+
+
+    if(tabuleiro[0] < 24 and tabuleiro[1] < 24):
+        for i in range(6):
+            tabuleiro[0] += tabuleiro[2 + i]
+            tabuleiro[1] += tabuleiro[8 + i]
 
     if(tabuleiro[0] > 24 and primeiro):
-        print("Venci")
-    if(tabuleiro[1] > 24 and not primeiro):
-        print("Venci")
+        print("ganhei!")
+    elif(tabuleiro[1] > 24 and not primeiro):
+        print("ganhei!")

@@ -18,12 +18,6 @@ terminal([X,_,_]) :-
 terminal([_, X, _]) :-
     X @> 24.
 terminal([_,_,[0,0,0,0,0,0,0,0,0,0,0,0]]).
-terminal([_,_,[1,0,0,0,0,0,1,0,0,0,0,0]]).
-terminal([_,_,[0,1,0,0,0,0,0,1,0,0,0,0]]).
-terminal([_,_,[0,0,1,0,0,0,0,0,1,0,0,0]]).
-terminal([_,_,[0,0,0,1,0,0,0,0,0,1,0,0]]).
-terminal([_,_,[0,0,0,0,1,0,0,0,0,0,1,0]]).
-terminal([_,_,[0,0,0,0,0,1,0,0,0,0,0,1]]).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -303,3 +297,25 @@ op([P1, P2, [_,_,_,_,_,_,0,0,0,0,0,0]], p2, 0, [P1, P2, [_,_,_,_,_,_,0,0,0,0,0,0
 
 oper(Ei, J, X, En) :-
     op(Ei, J, X, En).
+
+
+jogada_possivel([_,_,Tab], p1, X) :-
+    tab_1(Tab, L1),        % Verifica se a jogada X é válida
+    maximo(L1, M),
+    M @> 1,
+    nth1(X, Tabi, Val),
+    Val @> 1.
+jogada_possivel([_,_,Tab], p1, X) :-
+    tab_1(Tab, L1),        % Verifica se a jogada X é válida
+    maximo(L1, 1),
+    nth1(X, Tabi, 1).
+jogada_possivel([_,_,Tab], p2, X) :-
+    tab_2(Tab, L1),        % Verifica se a jogada X é válida
+    maximo(L1, M),
+    M @> 1,
+    nth1(X, Tabi, Val),
+    Val @> 1.
+jogada_possivel([_,_,Tab], p2, X) :-
+    tab_2(Tab, L1),        % Verifica se a jogada X é válida
+    maximo(L1, 1),
+    nth1(X, Tabi, 1).

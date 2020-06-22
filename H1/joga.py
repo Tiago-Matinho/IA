@@ -11,6 +11,8 @@ def faz_jogada(lista, pos):
     quociente = int(valor/11)
     resto = valor % 11
     ultima = pos - 1
+    if(ultima == -1):
+        ultima = 11
 
     #ciclo de distribuicao
     while(valor != 0):
@@ -32,6 +34,7 @@ def faz_jogada(lista, pos):
 
     #adiciona casa vazia
     lista[pos] = 0
+
 
     if(pos < 6):
         if(ultima < 6):
