@@ -122,6 +122,9 @@ if __name__ == '__main__':
     prolog = Prolog()
     prolog.consult("base.pl")
     prolog.consult(sys.argv[3])
+    profundidade = 0
+    if(sys.argv[3] == "minimax.pl"):
+        profundidade = 1
 
     if(sys.argv[1] != "p" and sys.argv[1] != "-p" and
         sys.argv[1] != "s" and sys.argv[1] != "-s"):
@@ -144,11 +147,11 @@ if __name__ == '__main__':
         exit(1)
 
     if(sys.argv[2] == "1"):
-        prolog.asserta("profundidade(7)")
+        prolog.asserta("profundidade(%d)" %(7 + profundidade))
     elif(sys.argv[2] == "2"):
-        prolog.asserta("profundidade(8)")
+        prolog.asserta("profundidade(%d)" %(8 + profundidade))
     elif(sys.argv[2] == "3"):
-        prolog.asserta("profundidade(9)")
+        prolog.asserta("profundidade(%d)" %(9 + profundidade))
     
     tabuleiro = [0,0,4,4,4,4,4,4,4,4,4,4,4,4]
 
