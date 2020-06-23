@@ -7,6 +7,7 @@ from tab import draw_board
 import tkinter as tk
 from tkinter import simpledialog
 
+# cria uma janela para receber inputs do utilizador
 def gui_input(img_sp):
     window = tk.Tk()
     window.withdraw()
@@ -18,17 +19,19 @@ def gui_input(img_sp):
         exit(1)
     return escolha
 
+# fecha o subprocesso que abriu a imagem anterior e cria um novo
 def gui_display(img_sp):
     img_sp.kill()
     new_img_sp = subprocess.Popen(["display", "Jogada.png"])
     return new_img_sp
 
+# trata da jogada da IA
 def jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME):
-    if(primeiro):
+    if(primeiro):   # sem jogada possivel
         if(max(tabuleiro[:6]) == 0):
             print(0)
             return tabuleiro
-    else:
+    else:           # sem jogada possivel
         if(max(tabuleiro[6:]) == 0):
             print(0)
             return tabuleiro
@@ -73,6 +76,7 @@ def jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME):
         draw_board(tabuleiro_n, escolhaBot)
     return tabuleiro_n
 
+# trata da jogada do adversario
 def jogada_adv(tabuleiro, primeiro, img_sp, GUI):
     
     if(GUI):
@@ -80,15 +84,15 @@ def jogada_adv(tabuleiro, primeiro, img_sp, GUI):
     else:
         escolha = int(input())  # recebe jogada
 
-    if(escolha == 0):       #nao altera
+    if(escolha == 0):       # nao altera
         return tabuleiro
 
-    if primeiro:            #caso o adversario seja o segundo a jogar
+    if primeiro:            # caso o adversario seja o segundo a jogar
         escolha += 6
 
-    tabuleiro_n, pontos = faz_jogada(tabuleiro[2:], escolha) #efectua a jogada
+    tabuleiro_n, pontos = faz_jogada(tabuleiro[2:], escolha) # efectua a jogada
 
-    #pontos
+    # pontos
     if(not primeiro):
         pontos += tabuleiro[0]
         tabuleiro_n.insert(0, tabuleiro[1])
@@ -103,17 +107,18 @@ def jogada_adv(tabuleiro, primeiro, img_sp, GUI):
         draw_board(tabuleiro_n, escolha)
     return tabuleiro_n
 
+# verifica se o jogo acabou
 def fim_jogo(tabuleiro):
     if(tabuleiro[0] > 24 or tabuleiro[1] > 24):
         return True
 
-    #verifica se existe um loop
+    # verifica se existe um loop
     if(max(tabuleiro) == 2):
         for i in range(6):
             if tabuleiro[i] == tabuleiro[i+6] == 1:
                 return True
 
-    #verifica se alguem ficou sem jogadas possiveis
+    # verifica se alguem ficou sem jogadas possiveis
     tab1 = tabuleiro[2:8]
     tab2 = tabuleiro[8:]
     if(max(tab1) == 0):
@@ -121,7 +126,7 @@ def fim_jogo(tabuleiro):
             for i in range(len(tab2)):
                 if(tab2[i] > 1):
                     possivel_tab, p = faz_jogada(tabuleiro, i+1)
-                    if(max(possivel_tab[:6]) != 0):
+                    if(max(possivel_tab[:6]) == 0):
                         return True
         else:
             if(tab2[5] == 1):
@@ -132,7 +137,7 @@ def fim_jogo(tabuleiro):
             for i in range(len(tab1)):
                 if(tab1[i] > 1):
                     possivel_tab, p = faz_jogada(tabuleiro, i+1)
-                    if(max(possivel_tab[6:]) != 0):
+                    if(max(possivel_tab[6:]) == 0):
                         return True
         else:
             if(tab1[5] == 1):
@@ -239,7 +244,7 @@ if __name__ == '__main__':
             if(fim_jogo(tabuleiro)):
                 break
 
-    #fim de jogo
+    # fim de jogo
     if(tabuleiro[0] < 24 and tabuleiro[1] < 24):
         for i in range(6):
             tabuleiro[0] += tabuleiro[2 + i]
