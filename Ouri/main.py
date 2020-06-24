@@ -158,9 +158,6 @@ if __name__ == '__main__':
     prolog.consult(sys.argv[1] + ".pl")
     profundidade = 0
 
-    if(sys.argv[1] == "minimax"):
-        profundidade = 1
-
     # argumento 2 (primeiro ou segundo)
     if(sys.argv[2] != "p" and sys.argv[2] != "-p" and
         sys.argv[2] != "s" and sys.argv[2] != "-s"):
@@ -182,11 +179,11 @@ if __name__ == '__main__':
         print("Argumentos errados: 1 / 2 / 3")
         exit(1)
     if(sys.argv[3] == "1"):
-        prolog.asserta("profundidade(%d)" %(7 + profundidade))
+        prolog.asserta("profundidade(%d)" %(7))
     elif(sys.argv[3] == "2"):
-        prolog.asserta("profundidade(%d)" %(8 + profundidade))
+        prolog.asserta("profundidade(%d)" %(8))
     elif(sys.argv[3] == "3"):
-        prolog.asserta("profundidade(%d)" %(9 + profundidade))
+        prolog.asserta("profundidade(%d)" %(9))
     
     # argumento 4 (TEMPO)
     DISPLAY_TIME = False
