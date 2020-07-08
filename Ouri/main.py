@@ -26,7 +26,7 @@ def gui_display(img_sp):
     return new_img_sp
 
 # trata da jogada da IA
-def jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME):
+def jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME, profundidade, profundidade_inicial):
     if(primeiro):   # sem jogada possivel
         if(max(tabuleiro[:6]) == 0):
             print(0)
@@ -69,6 +69,14 @@ def jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME):
 
     #tempo passado
     time_diff = int(time.time() * 1000) - start_time
+    if(time_diff < 10):
+        prolog.retractall("profundidade(_)")
+        prolog.asserta("profundidade(%d)" %(profundidade*2))
+        profundidade = profundidade * 2
+    else:
+        profundidade = profundidade_inicial
+
+
     if(DISPLAY_TIME):
         print("demorou: " + str(time_diff / 1000))
 
@@ -111,12 +119,6 @@ def jogada_adv(tabuleiro, primeiro, img_sp, GUI):
 def fim_jogo(tabuleiro):
     if(tabuleiro[0] > 24 or tabuleiro[1] > 24):
         return True
-
-    # verifica se existe um loop
-    if(max(tabuleiro) == 2):
-        for i in range(6):
-            if tabuleiro[i] == tabuleiro[i+6] == 1:
-                return True
 
     # verifica se alguem ficou sem jogadas possiveis
     tab1 = tabuleiro[2:8]
@@ -174,6 +176,7 @@ if __name__ == '__main__':
         prolog.consult("2.pl")  #regras para o jogador 2
 
     # argumento 3 (nivel)
+    """
     if(sys.argv[3] != "1" and sys.argv[3] != "2" and
         sys.argv[3] != "3"):
         print("Argumentos errados: 1 / 2 / 3")
@@ -184,7 +187,11 @@ if __name__ == '__main__':
         prolog.asserta("profundidade(%d)" %(8))
     elif(sys.argv[3] == "3"):
         prolog.asserta("profundidade(%d)" %(9))
-    
+    """
+    profundidade = int(sys.argv[3])
+    profundidade_inicial = profundidade
+    prolog.asserta("profundidade(%d)" %(profundidade))
+
     # argumento 4 (TEMPO)
     DISPLAY_TIME = False
     if(len(sys.argv) > 4):
@@ -219,7 +226,7 @@ if __name__ == '__main__':
     # ciclo principal
     while True:
         if(primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME)
+            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME, profundidade, profundidade_inicial)
             if(GUI):
                 img_sp = gui_display(img_sp)
 
@@ -234,7 +241,7 @@ if __name__ == '__main__':
             break
 
         if(not primeiro):
-            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME)
+            tabuleiro = jogada_ia(tabuleiro, primeiro, GUI, DISPLAY_TIME, profundidade, profundidade_inicial)
             if(GUI):
                 img_sp = gui_display(img_sp)
     
